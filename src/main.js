@@ -135,7 +135,7 @@ document.querySelector('#app').innerHTML = `
               <button type="button" role="option" aria-selected="false" data-language="en">英文</button>
             </div>
           </div>
-          <a class="contact-link" href="#explore"><span data-i18n="contact">联系我们</span><span class="contact-arrow" aria-hidden="true"><img class="contact-arrow__upper" src="${A}imgFrame.svg" alt=""><img class="contact-arrow__lower" src="${A}imgFrame.svg" alt=""></span></a>
+          <a class="contact-link" href="#explore"><span class="contact-copy"><span class="contact-copy__upper" data-i18n="contact">联系我们</span><span class="contact-copy__lower" data-i18n="contact" aria-hidden="true">联系我们</span></span><span class="contact-arrow" aria-hidden="true"><img class="contact-arrow__upper" src="${A}imgFrame.svg" alt=""><img class="contact-arrow__lower" src="${A}imgFrame.svg" alt=""></span></a>
         </div>
       </header>
       <h1 data-i18n="heroTitle">在晨昏交织处，智能觉醒</h1>
@@ -793,7 +793,7 @@ function render(timestamp = performance.now()) {
     partnersSection.classList.toggle('partners-news--entered', partnersInView);
   }
   const newsTop = partnersTop + newsTitle.offsetTop;
-  const newsVisible = designScroll > newsTop - heroHeight * .68
+  const newsVisible = designScroll > newsTop - heroHeight * 1.05
     && designScroll < newsTop + heroHeight * .82;
   if (newsVisible !== newsInView) {
     newsInView = newsVisible;
