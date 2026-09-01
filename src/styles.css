@@ -756,24 +756,20 @@
 .footer-nav a::after{
   content:"";
   position:absolute;
-  left:50%;
-  top:24px;
+  left:-14px;
+  top:50%;
   width:5px;
   height:5px;
   border-radius:50%;
   background:var(--orange);
   opacity:0;
-  transform:translate3d(-50%,-4px,0) scale(.35);
+  transform:translate3d(-4px,-50%,0) scale(.35);
   transition:opacity .2s ease,transform .34s cubic-bezier(.22,1,.36,1);
 }
 .footer-nav a:hover::after,
 .footer-nav a:focus-visible::after{
   opacity:1;
-  transform:translate3d(-50%,0,0) scale(1);
-}
-.footer-nav:has(a:hover) a:not(:hover),
-.footer-nav:has(a:focus-visible) a:not(:focus-visible){
-  color:rgba(255,255,255,.6);
+  transform:translate3d(0,-50%,0) scale(1);
 }
 .footer-contact a,
 .footer-legal a{
