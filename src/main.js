@@ -588,7 +588,7 @@ function updateMetrics() {
   const canvasOffset = innerWidth > DESIGN_WIDTH ? (innerWidth - DESIGN_WIDTH) / 2 : 0;
   canvas.style.left = `${canvasOffset}px`;
   canvas.style.setProperty('--layout-width', `${layoutWidth}px`);
-  canvas.dataset.viewport = innerWidth <= 768
+  canvas.dataset.viewport = innerWidth <= 900
     ? 'mobile'
     : innerWidth <= 1024
       ? 'tablet'
@@ -597,18 +597,26 @@ function updateMetrics() {
         : innerWidth <= 1366
           ? 'laptop'
           : innerWidth <= 1920 ? 'desktop' : 'wide';
-  heroHeight = innerHeight / scale;
-  productPinDistance = heroHeight * (compactLayout ? 3.05 : 1.94);
-  productReleaseDistance = heroHeight * .08;
-  solutionsPinDistance = heroHeight * (compactLayout ? 2.55 : 2.2);
+  const naturalScreenHeight = innerHeight / scale;
+  const compactScreenCap = innerWidth <= 900
+    ? Math.max(720, layoutWidth * 1.35)
+    : Math.max(760, layoutWidth * 1.15);
+  heroHeight = compactLayout
+    ? Math.min(naturalScreenHeight, compactScreenCap)
+    : Math.min(SCREEN_HEIGHT, naturalScreenHeight);
+  productPinDistance = heroHeight * (compactLayout ? 2.4 : .62);
+  productReleaseDistance = heroHeight * .04;
+  solutionsPinDistance = heroHeight * (compactLayout ? 2.05 : 1.8);
   canvas.style.setProperty('--hero-height', `${heroHeight}px`);
   canvas.style.setProperty('--screen-height', `${heroHeight}px`);
-  canvas.style.setProperty('--screen-ratio', `${Math.min(1, heroHeight / SCREEN_HEIGHT)}`);
+  canvas.style.setProperty('--screen-ratio', `${compactLayout ? 1 : Math.min(1, heroHeight / SCREEN_HEIGHT)}`);
   productsSection.style.setProperty('--products-height', `${heroHeight + productPinDistance}px`);
   solutionsSection.style.setProperty('--solutions-height', `${heroHeight + solutionsPinDistance}px`);
   const nonScreenHeight = partnersSection.offsetHeight + exploreSection.offsetHeight + footerSection.offsetHeight;
-  canvas.style.height = `${nonScreenHeight + heroHeight * SCREEN_SECTION_COUNT + productPinDistance + solutionsPinDistance - PRODUCT_LOOP_OVERLAP}px`;
-  document.body.style.height = `${(nonScreenHeight - PRODUCT_LOOP_OVERLAP) * scale + innerHeight * SCREEN_SECTION_COUNT + (productPinDistance + solutionsPinDistance) * scale}px`;
+  const canvasDesignHeight = nonScreenHeight + heroHeight * SCREEN_SECTION_COUNT
+    + productPinDistance + solutionsPinDistance - PRODUCT_LOOP_OVERLAP;
+  canvas.style.height = `${canvasDesignHeight}px`;
+  document.body.style.height = `${Math.max(innerHeight, canvasDesignHeight * scale)}px`;
   const maxScroll = Math.max(0, document.documentElement.scrollHeight - innerHeight);
   scrollTarget = Math.min(maxScroll, Math.max(0, scrollTarget));
 }
