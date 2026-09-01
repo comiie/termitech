@@ -672,3 +672,55 @@
 @media(prefers-reduced-motion:reduce){
   .partners-news>.section-title p,.partners-news>.section-title h2,.partners-news .partner-cell,.partners-news .partner-cell__logo,.partners-news .news-title .section-title p,.partners-news .news-title .section-title h2,.partners-news .news-action,.partners-news .news-card,.news-card__media img,.news-card time,.news-card time::after{transition:none!important}
 }
+
+/* Footer — staggered reveal plus a three-colour scan clipped to the logo outline. */
+.footer-nav,
+.footer-contact,
+.footer-legal,
+.footer-mark{
+  opacity:0;
+  transform:translate3d(0,28px,0);
+  transition:opacity .72s ease,transform 1.05s cubic-bezier(.16,1,.3,1);
+  will-change:opacity,transform;
+}
+.footer-nav{transition-delay:.08s}
+.footer-contact{transition-delay:.16s}
+.footer-legal{transition-delay:.24s}
+.footer-mark{transition-delay:.32s}
+.footer--entered .footer-nav,
+.footer--entered .footer-contact,
+.footer--entered .footer-legal,
+.footer--entered .footer-mark{
+  opacity:1;
+  transform:translate3d(0,0,0);
+}
+.footer-mark__scan{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background-image:linear-gradient(90deg,transparent 0%,rgba(255,135,0,.08) 12%,#ff8700 30%,#8d81ff 52%,#3f3ddd 72%,rgba(63,61,221,.08) 88%,transparent 100%);
+  background-repeat:no-repeat;
+  background-size:560px 100%;
+  background-position:-620px 0;
+  -webkit-mask-image:url('/assets/imgGroup2090054754.svg'),url('/assets/imgGroup1.svg');
+  -webkit-mask-repeat:no-repeat,no-repeat;
+  -webkit-mask-size:284px 281.474px,1372.36px 212.06px;
+  -webkit-mask-position:0 0,387.7px 42.48px;
+  mask-image:url('/assets/imgGroup2090054754.svg'),url('/assets/imgGroup1.svg');
+  mask-repeat:no-repeat,no-repeat;
+  mask-size:284px 281.474px,1372.36px 212.06px;
+  mask-position:0 0,387.7px 42.48px;
+  will-change:background-position,filter;
+}
+.footer-mark__scan--line{opacity:1;filter:saturate(1.16) brightness(1.45)}
+.footer-mark__scan--glow{z-index:1;opacity:.9;filter:blur(15px) saturate(1.3) brightness(1.2)}
+.footer--entered .footer-mark__scan{animation:footer-mark-scan 5.6s cubic-bezier(.42,0,.18,1) 1.05s infinite both}
+@keyframes footer-mark-scan{
+  0%{background-position:-620px 0}
+  76%,100%{background-position:1820px 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .footer-nav,.footer-contact,.footer-legal,.footer-mark{transition:none!important}
+  .footer-mark__scan{display:none!important}
+}

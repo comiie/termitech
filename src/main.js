@@ -292,7 +292,12 @@ document.querySelector('#app').innerHTML = `
       <nav class="footer-nav"><div><a href="#home">首页</a><a href="#about">关于我们</a><a href="#products">产品中心</a><a href="#solutions">解决方案</a></div><div><a href="#news">新闻动态</a><a href="#footer">加入我们</a><a href="#explore">联系我们</a><a href="#partners">案例中心</a></div></nav>
       <div class="footer-contact"><div><span>邮箱</span><a href="mailto:contact@termitech.cn">contact@termitech.cn</a></div><div><span>地址</span><p>广东省深圳市坪山区龙田街道竹坑社区聚和路8号多彩硅谷</p></div></div>
       <div class="footer-legal"><a href="#footer">服务条款</a><a href="#footer">隐私政策</a><p>© 2026,TermiTech. All Rights Reserved.</p><img class="footer-social-row" src="${A}imgGroup2085661577.svg" alt="社交媒体"><img class="footer-social-x" src="${A}social-x.svg" alt="X"></div>
-      <div class="footer-mark"><img class="footer-mark__symbol" src="${A}imgGroup2090054754.svg" alt=""><img class="footer-mark__word" src="${A}imgGroup1.svg" alt="TermiTech"></div>
+      <div class="footer-mark">
+        <img class="footer-mark__symbol" src="${A}imgGroup2090054754.svg" alt="">
+        <img class="footer-mark__word" src="${A}imgGroup1.svg" alt="TermiTech">
+        <span class="footer-mark__scan footer-mark__scan--glow" aria-hidden="true"></span>
+        <span class="footer-mark__scan footer-mark__scan--line" aria-hidden="true"></span>
+      </div>
     </footer>
   </main></div>`;
 
@@ -366,6 +371,7 @@ document.querySelectorAll('.action').forEach(actionElement => {
   actionElement.addEventListener('blur', () => actionElement.classList.remove('is-hovered'));
 });
 const exploreSection = document.querySelector('.explore');
+const footerSection = document.querySelector('.footer');
 const languagePicker = document.querySelector('.language-picker');
 const languageTrigger = document.querySelector('.language-picker__trigger');
 const languageOptions = [...document.querySelectorAll('[data-language]')];
@@ -396,6 +402,7 @@ const partnersSection = document.querySelector('.partners-news');
 const newsTitle = document.querySelector('.news-title');
 let partnersInView = false;
 let newsInView = false;
+let footerInView = false;
 
 const translations = {
   zh: {
@@ -764,6 +771,13 @@ function render(timestamp = performance.now()) {
     partnersSection.classList.toggle('partners-news--news-entered', newsInView);
   }
   const exploreTop = exploreSection.offsetTop;
+  const footerTop = footerSection.offsetTop;
+  const footerVisible = designScroll > footerTop - heroHeight * .78
+    && designScroll < footerTop + footerSection.offsetHeight * .92;
+  if (footerVisible !== footerInView) {
+    footerInView = footerVisible;
+    footerSection.classList.toggle('footer--entered', footerInView);
+  }
   viewport.style.background = designScroll < heroHeight || designScroll >= exploreTop ? '#000' : '#fff';
   canvas.style.transform = `translate3d(0, ${-current}px, 0) scale(${scale})`;
   header.style.transform = `translate3d(0, ${designScroll}px, 0)`;
