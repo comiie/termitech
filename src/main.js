@@ -266,19 +266,21 @@ document.querySelector('#app').innerHTML = `
       ${sectionTitle('about us', '关于我们', true)}
       <p class="about__intro">晨昏线科技致力于构建具身机器人大脑，以跨本体、跨品牌的通用适配能力为己任，打破硬件壁垒，让智能真正流动。</p>
       <div class="about__action">${action('了解更多', '#about', 'glass')}</div>
-      <div class="metric" style="left:80px;--metric-color:#FF8700;--metric-index:0"><strong>20+</strong><span>硬件厂商</span></div>
-      <div class="metric" style="left:526px;--metric-color:#8D81FF;--metric-index:1"><strong>10+</strong><span>场景落地</span></div>
-      <div class="metric" style="left:972px;--metric-color:#3F3DDD;--metric-index:2"><strong>5000万+</strong><span>成交订单</span></div>
-      <div class="metric" style="left:1418px;--metric-color:#FF8700;--metric-index:3"><strong>近1亿元</strong><span>融资</span></div>
+      <div class="metrics-grid">
+        <div class="metric" style="left:80px;--metric-color:#FF8700;--metric-index:0"><strong>20+</strong><span>硬件厂商</span></div>
+        <div class="metric" style="left:526px;--metric-color:#8D81FF;--metric-index:1"><strong>10+</strong><span>场景落地</span></div>
+        <div class="metric" style="left:972px;--metric-color:#3F3DDD;--metric-index:2"><strong>5000万+</strong><span>成交订单</span></div>
+        <div class="metric" style="left:1418px;--metric-color:#FF8700;--metric-index:3"><strong>近1亿元</strong><span>融资</span></div>
+      </div>
     </section>
 
     <section class="partners-news" id="partners" data-figma-node="200:577">
       ${sectionTitle('our partners', '合作伙伴')}
       <p class="partners-lead">携手行业伙伴，共同推动具身智能技术走向更广泛的真实应用。</p>
-      ${partnerCells}
+      <div class="partner-grid">${partnerCells}</div>
       <div class="news-title" id="news">${sectionTitle('Latest Updates', '最新动态')}</div>
       <div class="news-action">${action('了解更多', '#news')}</div>
-      ${newsCards}
+      <div class="news-grid">${newsCards}</div>
     </section>
 
     <section class="explore" id="explore" data-figma-node="176:431">
@@ -308,7 +310,6 @@ const viewport = document.querySelector('.viewport');
 const DESIGN_WIDTH = 1920;
 const SCREEN_HEIGHT = 1080;
 const SCREEN_SECTION_COUNT = 5;
-const NON_SCREEN_HEIGHT = 2867;
 const PRODUCT_LOOP_OVERLAP = 160;
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const hero = document.querySelector('.hero');
@@ -386,6 +387,8 @@ const heroPlayerVideo = heroPlayer.querySelector('video');
 const heroPlayerClose = heroPlayer.querySelector('.hero-player__close');
 let activeVideoCard = null;
 let scale = innerWidth / DESIGN_WIDTH;
+let layoutWidth = DESIGN_WIDTH;
+let compactLayout = false;
 let heroHeight = SCREEN_HEIGHT;
 let productPinDistance = SCREEN_HEIGHT * 1.94;
 let productReleaseDistance = SCREEN_HEIGHT * .08;
@@ -459,6 +462,12 @@ function renderHeroTitle(text) {
     const sequence = (index * 7) % Math.max(text.length, 1);
     span.style.setProperty('--title-delay', `${80 + sequence * 28}ms`);
     heroTitle.append(span);
+    if (character === '，' || character === ',') {
+      const mobileBreak = document.createElement('span');
+      mobileBreak.className = 'title-mobile-break';
+      mobileBreak.setAttribute('aria-hidden', 'true');
+      heroTitle.append(mobileBreak);
+    }
   });
   requestAnimationFrame(() => requestAnimationFrame(() => heroTitle.classList.add('is-revealed')));
 }
@@ -573,18 +582,33 @@ setTimeout(() => {
 }, reduceMotion.matches ? 0 : 420);
 
 function updateMetrics() {
-  scale = innerWidth / DESIGN_WIDTH;
+  compactLayout = innerWidth <= 1024;
+  layoutWidth = compactLayout ? innerWidth : DESIGN_WIDTH;
+  scale = compactLayout ? 1 : Math.min(1, innerWidth / DESIGN_WIDTH);
+  const canvasOffset = innerWidth > DESIGN_WIDTH ? (innerWidth - DESIGN_WIDTH) / 2 : 0;
+  canvas.style.left = `${canvasOffset}px`;
+  canvas.style.setProperty('--layout-width', `${layoutWidth}px`);
+  canvas.dataset.viewport = innerWidth <= 768
+    ? 'mobile'
+    : innerWidth <= 1024
+      ? 'tablet'
+      : innerWidth <= 1199
+        ? 'compact'
+        : innerWidth <= 1366
+          ? 'laptop'
+          : innerWidth <= 1920 ? 'desktop' : 'wide';
   heroHeight = innerHeight / scale;
-  productPinDistance = heroHeight * 1.94;
+  productPinDistance = heroHeight * (compactLayout ? 3.05 : 1.94);
   productReleaseDistance = heroHeight * .08;
-  solutionsPinDistance = heroHeight * 2.2;
+  solutionsPinDistance = heroHeight * (compactLayout ? 2.55 : 2.2);
   canvas.style.setProperty('--hero-height', `${heroHeight}px`);
   canvas.style.setProperty('--screen-height', `${heroHeight}px`);
   canvas.style.setProperty('--screen-ratio', `${Math.min(1, heroHeight / SCREEN_HEIGHT)}`);
   productsSection.style.setProperty('--products-height', `${heroHeight + productPinDistance}px`);
   solutionsSection.style.setProperty('--solutions-height', `${heroHeight + solutionsPinDistance}px`);
-  canvas.style.height = `${NON_SCREEN_HEIGHT + heroHeight * SCREEN_SECTION_COUNT + productPinDistance + solutionsPinDistance - PRODUCT_LOOP_OVERLAP}px`;
-  document.body.style.height = `${(NON_SCREEN_HEIGHT - PRODUCT_LOOP_OVERLAP) * scale + innerHeight * SCREEN_SECTION_COUNT + (productPinDistance + solutionsPinDistance) * scale}px`;
+  const nonScreenHeight = partnersSection.offsetHeight + exploreSection.offsetHeight + footerSection.offsetHeight;
+  canvas.style.height = `${nonScreenHeight + heroHeight * SCREEN_SECTION_COUNT + productPinDistance + solutionsPinDistance - PRODUCT_LOOP_OVERLAP}px`;
+  document.body.style.height = `${(nonScreenHeight - PRODUCT_LOOP_OVERLAP) * scale + innerHeight * SCREEN_SECTION_COUNT + (productPinDistance + solutionsPinDistance) * scale}px`;
   const maxScroll = Math.max(0, document.documentElement.scrollHeight - innerHeight);
   scrollTarget = Math.min(maxScroll, Math.max(0, scrollTarget));
 }
@@ -645,10 +669,11 @@ function render(timestamp = performance.now()) {
   const travelDistance = Math.max(1, productPinDistance - productReleaseDistance);
   const travelProgress = Math.min(1, Math.max(0, productsLocal / travelDistance));
   const alignProgress = travelProgress;
-  const horizontalShift = 792 * travelProgress;
-  const surfaceTops = [274, 329, 369, 409];
-  const initialOffsets = [0, 40, 60, 80];
-  const finalSurfaceTop = 334;
+  const compactCardStep = Math.max(320, layoutWidth - 24);
+  const horizontalShift = (compactLayout ? compactCardStep * 3 : 792) * travelProgress;
+  const surfaceTops = compactLayout ? [190, 190, 190, 190] : [274, 329, 369, 409];
+  const initialOffsets = compactLayout ? [0, 0, 0, 0] : [0, 40, 60, 80];
+  const finalSurfaceTop = compactLayout ? 190 : 334;
   const releaseLocal = Math.max(0, productsLocal - travelDistance);
   const releaseProgress = productReleaseDistance
     ? Math.min(1, releaseLocal / productReleaseDistance)
