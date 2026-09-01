@@ -7,20 +7,7 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@gltf-transform/core':
-        specifier: ^4.4.2
-        version: 4.4.2
-      occt-import-js:
-        specifier: ^0.0.23
-        version: 0.0.23
-      three:
-        specifier: ^0.185.1
-        version: 0.185.1
     devDependencies:
-      '@openai/sites-vite-plugin':
-        specifier: ^0.2.0
-        version: 0.2.0(vite@7.3.6)
       vite:
         specifier: ^7.1.3
         version: 7.3.6
@@ -183,21 +170,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@gltf-transform/core@4.4.2':
-    resolution: {integrity: sha512-qsWKwNSwK+2s834Mt4xbYcyHqCrgNFP7hIv5s487JxebngRfDgelpghNF+kSswGb2/NuapasfK3UViFoSJJoMg==}
-
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     resolution: {integrity: sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==}
     engines: {node: ^22.20 || ^24.12 || >=25}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
-
-  '@openai/sites-vite-plugin@0.2.0':
-    resolution: {integrity: sha512-4ThLMW9eaf2gd+SqBwHmqBONKBAbQ2BuOFev7mHq7Y2W5mm/rfVJOSjcgQIsY2PqdXxXNZ4Yd0+s0DlSUYehag==}
-    engines: {node: '>=22.13.0'}
-    peerDependencies:
-      vite: ^8.0.0
 
   '@rollup/rollup-android-arm-eabi@4.63.0':
     resolution: {integrity: sha512-70TeIFezKKy65LgAVyQh+w94/gjWhvPWaLaGGeMEgVrPkQhuj/M5bAYYZzIFUj9Y69oHyTm5Um/R6gcLh4A8JA==}
@@ -364,9 +342,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  occt-import-js@0.0.23:
-    resolution: {integrity: sha512-RFfYQXYFX5C1mB1Aywm0ShcUKzXOr/VzTnlzhBSDJOR6YCAPt1HYCzeXWg1vwwjn/cUxwqRNhhtf1dlewoZYCQ==}
-
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -378,9 +353,6 @@ packages:
     resolution: {integrity: sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  property-graph@4.1.0:
-    resolution: {integrity: sha512-AvPcP7XECNWy4LGmFQ77k7un4lSKM4eS29PTvW4ck95uYeLxXPWJM7hLuBqK91FaHqCcgJvIUCuNJjjxKE7VKQ==}
-
   rollup@4.63.0:
     resolution: {integrity: sha512-T5vnZ2y4QqC3/4P+w2+JO+Q/OVdnPsv4XcSYJYMEn0R9/jjl5AgLwO9LAZMzP2lN71O6pypn91rB7lDstUkfrQ==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
@@ -389,9 +361,6 @@ packages:
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
-
-  three@0.185.1:
-    resolution: {integrity: sha512-5aojFCXKwnjBRZvUnt3WFfEcvUJgkN5LlijRFN95hMy8WVkG4I0QNcJE+OuWvuJ0bOdStrbfXn0pkd6/QyiAlg==}
 
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
@@ -517,16 +486,8 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@gltf-transform/core@4.4.2':
-    dependencies:
-      property-graph: 4.1.0
-
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     optional: true
-
-  '@openai/sites-vite-plugin@0.2.0(vite@7.3.6)':
-    dependencies:
-      vite: 7.3.6
 
   '@rollup/rollup-android-arm-eabi@4.63.0':
     optional: true
@@ -643,8 +604,6 @@ snapshots:
 
   nanoid@3.3.18: {}
 
-  occt-import-js@0.0.23: {}
-
   picocolors@1.1.1: {}
 
   picomatch@4.0.7: {}
@@ -654,8 +613,6 @@ snapshots:
       nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
-
-  property-graph@4.1.0: {}
 
   rollup@4.63.0:
     dependencies:
@@ -690,8 +647,6 @@ snapshots:
       fsevents: 2.3.3
 
   source-map-js@1.2.1: {}
-
-  three@0.185.1: {}
 
   tinyglobby@0.2.17:
     dependencies:

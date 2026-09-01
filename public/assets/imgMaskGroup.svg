@@ -1,0 +1,17 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Mask group">
+<mask id="mask0_0_4" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40">
+<rect id="Rectangle 1430107009" width="40" height="40" rx="4.5" fill="#FF8700"/>
+</mask>
+<g mask="url(#mask0_0_4)">
+<circle id="Ellipse 4" cx="7.75" cy="1.75" r="23.75" fill="#FF8700"/>
+<circle id="Ellipse 7" cx="21.25" cy="19.25" r="28.25" fill="#FF8700"/>
+<circle id="Ellipse 6" cx="37.5" cy="34.5" r="27.5" fill="#3F3DDD"/>
+<circle id="Ellipse 5" cx="8.75" cy="47" r="23.75" fill="#8D81FF"/>
+<foreignObject x="-9.9" y="-9.9" width="59.8" height="59.8"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(4.95px);clip-path:url(#bgblur_0_0_4_clip_path);height:100%;width:100%"></div></foreignObject><rect id="Rectangle 1430107010" data-figma-bg-blur-radius="9.9" width="40" height="40" fill="white" fill-opacity="0.2"/>
+</g>
+</g>
+<defs>
+<clipPath id="bgblur_0_0_4_clip_path" transform="translate(9.9 9.9)"><rect width="40" height="40"/>
+</clipPath></defs>
+</svg>
