@@ -726,12 +726,12 @@
   inset:0;
   z-index:2;
   pointer-events:none;
-  background-image:radial-gradient(ellipse var(--footer-glow-width,420px) var(--footer-glow-height,220px) at var(--footer-glow-x,50%) var(--footer-glow-y,50%),#ff8700 0%,#8d81ff 32%,#3f3ddd 60%,rgba(63,61,221,.18) 78%,transparent 100%);
-  -webkit-mask-image:url('/assets/imgGroup2090054754.svg'),url('/assets/imgGroup1.svg');
+  background-image:radial-gradient(ellipse var(--footer-glow-width,240px) var(--footer-glow-height,150px) at var(--footer-glow-x,50%) var(--footer-glow-y,50%),#ff8700 0%,#8d81ff 34%,#3f3ddd 62%,rgba(63,61,221,.2) 80%,transparent 100%);
+  -webkit-mask-image:url('/assets/footer-symbol-mask.svg'),url('/assets/footer-word-mask.svg');
   -webkit-mask-repeat:no-repeat,no-repeat;
   -webkit-mask-size:284px 281.474px,1372.36px 212.06px;
   -webkit-mask-position:0 0,387.7px 42.48px;
-  mask-image:url('/assets/imgGroup2090054754.svg'),url('/assets/imgGroup1.svg');
+  mask-image:url('/assets/footer-symbol-mask.svg'),url('/assets/footer-word-mask.svg');
   mask-repeat:no-repeat,no-repeat;
   mask-size:284px 281.474px,1372.36px 212.06px;
   mask-position:0 0,387.7px 42.48px;
@@ -739,10 +739,14 @@
   transition:opacity .42s cubic-bezier(.22,1,.36,1);
   will-change:opacity,filter;
 }
-.footer-mark__scan--line{--footer-glow-width:430px;--footer-glow-height:230px;filter:saturate(1.18) brightness(1.58)}
-.footer-mark__scan--glow{z-index:1;--footer-glow-width:580px;--footer-glow-height:310px;filter:blur(26px) saturate(1.38) brightness(1.32)}
+.footer-mark__scan--line{z-index:4;--footer-glow-width:235px;--footer-glow-height:145px;filter:saturate(1.22) brightness(1.5)}
+.footer-mark__scan--glow-near{z-index:3;--footer-glow-width:245px;--footer-glow-height:155px;filter:blur(7px) saturate(1.35) brightness(1.45)}
+.footer-mark__scan--glow-mid{z-index:2;--footer-glow-width:270px;--footer-glow-height:175px;filter:blur(17px) saturate(1.4) brightness(1.35)}
+.footer-mark__scan--glow-far{z-index:1;--footer-glow-width:310px;--footer-glow-height:205px;filter:blur(34px) saturate(1.45) brightness(1.25)}
 .footer-mark--hovered .footer-mark__scan--line{opacity:1}
-.footer-mark--hovered .footer-mark__scan--glow{opacity:.92}
+.footer-mark--hovered .footer-mark__scan--glow-near{opacity:.94}
+.footer-mark--hovered .footer-mark__scan--glow-mid{opacity:.76}
+.footer-mark--hovered .footer-mark__scan--glow-far{opacity:.56}
 .footer-nav a,
 .footer-contact a,
 .footer-legal a{

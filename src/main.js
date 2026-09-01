@@ -295,7 +295,9 @@ document.querySelector('#app').innerHTML = `
       <div class="footer-mark">
         <img class="footer-mark__symbol" src="${A}imgGroup2090054754.svg" alt="">
         <img class="footer-mark__word" src="${A}imgGroup1.svg" alt="TermiTech">
-        <span class="footer-mark__scan footer-mark__scan--glow" aria-hidden="true"></span>
+        <span class="footer-mark__scan footer-mark__scan--glow-far" aria-hidden="true"></span>
+        <span class="footer-mark__scan footer-mark__scan--glow-mid" aria-hidden="true"></span>
+        <span class="footer-mark__scan footer-mark__scan--glow-near" aria-hidden="true"></span>
         <span class="footer-mark__scan footer-mark__scan--line" aria-hidden="true"></span>
       </div>
     </footer>
