@@ -372,6 +372,7 @@ document.querySelectorAll('.action').forEach(actionElement => {
 });
 const exploreSection = document.querySelector('.explore');
 const footerSection = document.querySelector('.footer');
+const footerMark = document.querySelector('.footer-mark');
 const languagePicker = document.querySelector('.language-picker');
 const languageTrigger = document.querySelector('.language-picker__trigger');
 const languageOptions = [...document.querySelectorAll('[data-language]')];
@@ -402,7 +403,28 @@ const partnersSection = document.querySelector('.partners-news');
 const newsTitle = document.querySelector('.news-title');
 let partnersInView = false;
 let newsInView = false;
+let exploreInView = false;
 let footerInView = false;
+const footerGlowPointer = {
+  targetX: 880,
+  targetY: 140,
+  currentX: 880,
+  currentY: 140,
+};
+
+function updateFooterGlowTarget(event) {
+  const rect = footerMark.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  footerGlowPointer.targetX = ((event.clientX - rect.left) / rect.width) * footerMark.offsetWidth;
+  footerGlowPointer.targetY = ((event.clientY - rect.top) / rect.height) * footerMark.offsetHeight;
+}
+
+footerMark.addEventListener('pointerenter', event => {
+  updateFooterGlowTarget(event);
+  footerMark.classList.add('footer-mark--hovered');
+});
+footerMark.addEventListener('pointermove', updateFooterGlowTarget);
+footerMark.addEventListener('pointerleave', () => footerMark.classList.remove('footer-mark--hovered'));
 
 const translations = {
   zh: {
@@ -594,6 +616,11 @@ function render(timestamp = performance.now()) {
   if (!running) return;
   const deltaTime = Math.min(48, Math.max(1, timestamp - lastFrameTimestamp));
   lastFrameTimestamp = timestamp;
+  const footerGlowBlend = reduceMotion.matches ? 1 : 1 - Math.exp(-deltaTime / 78);
+  footerGlowPointer.currentX += (footerGlowPointer.targetX - footerGlowPointer.currentX) * footerGlowBlend;
+  footerGlowPointer.currentY += (footerGlowPointer.targetY - footerGlowPointer.currentY) * footerGlowBlend;
+  footerMark.style.setProperty('--footer-glow-x', `${footerGlowPointer.currentX.toFixed(2)}px`);
+  footerMark.style.setProperty('--footer-glow-y', `${footerGlowPointer.currentY.toFixed(2)}px`);
   target = scrollTarget;
   if (reduceMotion.matches) current = target;
   else {
@@ -771,6 +798,12 @@ function render(timestamp = performance.now()) {
     partnersSection.classList.toggle('partners-news--news-entered', newsInView);
   }
   const exploreTop = exploreSection.offsetTop;
+  const exploreVisible = designScroll > exploreTop - heroHeight * .72
+    && designScroll < exploreTop + exploreSection.offsetHeight * .92;
+  if (exploreVisible !== exploreInView) {
+    exploreInView = exploreVisible;
+    exploreSection.classList.toggle('explore--entered', exploreInView);
+  }
   const footerTop = footerSection.offsetTop;
   const footerVisible = designScroll > footerTop - heroHeight * .78
     && designScroll < footerTop + footerSection.offsetHeight * .92;

@@ -673,7 +673,34 @@
   .partners-news>.section-title p,.partners-news>.section-title h2,.partners-news .partner-cell,.partners-news .partner-cell__logo,.partners-news .news-title .section-title p,.partners-news .news-title .section-title h2,.partners-news .news-action,.partners-news .news-card,.news-card__media img,.news-card time,.news-card time::after{transition:none!important}
 }
 
-/* Footer — staggered reveal plus a three-colour scan clipped to the logo outline. */
+/* Explore — replay the complete composition when it re-enters the viewport. */
+.explore__background,
+.explore__shade,
+.explore__ghost,
+.explore h2,
+.explore__action,
+.explore__orbit{
+  opacity:0;
+  will-change:opacity,transform;
+}
+.explore__background{transform:scale(1.025);transition:opacity .95s ease,transform 1.35s cubic-bezier(.16,1,.3,1)}
+.explore__shade{transition:opacity .95s ease}
+.explore__ghost{transform:translate3d(0,32px,0);transition:opacity .72s ease .08s,transform 1s cubic-bezier(.16,1,.3,1) .08s}
+.explore h2{transform:translate3d(-50%,28px,0);transition:opacity .72s ease .24s,transform 1s cubic-bezier(.16,1,.3,1) .24s}
+.explore__action{transform:translate3d(0,24px,0);transition:opacity .72s ease .38s,transform 1s cubic-bezier(.16,1,.3,1) .38s}
+.explore__orbit{transform:translate3d(0,32px,0);transition:opacity .72s ease .5s,transform 1.05s cubic-bezier(.16,1,.3,1) .5s}
+.explore--entered .explore__background,
+.explore--entered .explore__shade,
+.explore--entered h2,
+.explore--entered .explore__action,
+.explore--entered .explore__orbit{opacity:1}
+.explore--entered .explore__background{transform:scale(1)}
+.explore--entered .explore__ghost{opacity:.16;transform:translate3d(0,0,0)}
+.explore--entered h2{transform:translate3d(-50%,0,0)}
+.explore--entered .explore__action,
+.explore--entered .explore__orbit{transform:translate3d(0,0,0)}
+
+/* Footer — staggered reveal, with colour appearing only under the pointer. */
 .footer-nav,
 .footer-contact,
 .footer-legal,
@@ -699,10 +726,7 @@
   inset:0;
   z-index:2;
   pointer-events:none;
-  background-image:linear-gradient(90deg,transparent 0%,rgba(255,135,0,.08) 12%,#ff8700 30%,#8d81ff 52%,#3f3ddd 72%,rgba(63,61,221,.08) 88%,transparent 100%);
-  background-repeat:no-repeat;
-  background-size:560px 100%;
-  background-position:-620px 0;
+  background-image:radial-gradient(circle 250px at var(--footer-glow-x,50%) var(--footer-glow-y,50%),#ff8700 0%,#8d81ff 35%,#3f3ddd 62%,rgba(63,61,221,.12) 78%,transparent 100%);
   -webkit-mask-image:url('/assets/imgGroup2090054754.svg'),url('/assets/imgGroup1.svg');
   -webkit-mask-repeat:no-repeat,no-repeat;
   -webkit-mask-size:284px 281.474px,1372.36px 212.06px;
@@ -711,16 +735,29 @@
   mask-repeat:no-repeat,no-repeat;
   mask-size:284px 281.474px,1372.36px 212.06px;
   mask-position:0 0,387.7px 42.48px;
-  will-change:background-position,filter;
+  opacity:0;
+  transition:opacity .42s cubic-bezier(.22,1,.36,1);
+  will-change:opacity,filter;
 }
-.footer-mark__scan--line{opacity:1;filter:saturate(1.16) brightness(1.45)}
-.footer-mark__scan--glow{z-index:1;opacity:.9;filter:blur(15px) saturate(1.3) brightness(1.2)}
-.footer--entered .footer-mark__scan{animation:footer-mark-scan 5.6s cubic-bezier(.42,0,.18,1) 1.05s infinite both}
-@keyframes footer-mark-scan{
-  0%{background-position:-620px 0}
-  76%,100%{background-position:1820px 0}
+.footer-mark__scan--line{filter:saturate(1.16) brightness(1.55)}
+.footer-mark__scan--glow{z-index:1;filter:blur(16px) saturate(1.35) brightness(1.28)}
+.footer-mark--hovered .footer-mark__scan--line{opacity:1}
+.footer-mark--hovered .footer-mark__scan--glow{opacity:.92}
+.footer-nav a,
+.footer-contact a,
+.footer-legal a{
+  transition:color .38s ease,filter .38s ease;
+}
+.footer-nav a:hover,
+.footer-contact a:hover,
+.footer-legal a:hover{
+  background:linear-gradient(90deg,var(--orange),var(--lavender),var(--violet));
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 6px rgba(141,129,255,.5));
 }
 @media(prefers-reduced-motion:reduce){
-  .footer-nav,.footer-contact,.footer-legal,.footer-mark{transition:none!important}
-  .footer-mark__scan{display:none!important}
+  .explore__background,.explore__shade,.explore__ghost,.explore h2,.explore__action,.explore__orbit,.footer-nav,.footer-contact,.footer-legal,.footer-mark,.footer-mark__scan{transition:none!important}
 }
