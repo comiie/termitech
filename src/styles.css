@@ -726,7 +726,7 @@
   inset:0;
   z-index:2;
   pointer-events:none;
-  background-image:radial-gradient(ellipse var(--footer-glow-width,240px) var(--footer-glow-height,150px) at var(--footer-glow-x,50%) var(--footer-glow-y,50%),#ff8700 0%,#8d81ff 34%,#3f3ddd 62%,rgba(63,61,221,.2) 80%,transparent 100%);
+  background-image:radial-gradient(ellipse var(--footer-glow-width,240px) var(--footer-glow-height,150px) at var(--footer-glow-x,50%) var(--footer-glow-y,50%),#ff8700 0%,#ff8700 26%,#d88a76 38%,#8d81ff 52%,#6b65ee 66%,#3f3ddd 78%,rgba(63,61,221,.18) 88%,transparent 100%);
   -webkit-mask-image:url('/assets/footer-symbol-mask.svg'),url('/assets/footer-word-mask.svg');
   -webkit-mask-repeat:no-repeat,no-repeat;
   -webkit-mask-size:284px 281.474px,1372.36px 212.06px;
