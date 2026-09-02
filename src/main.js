@@ -290,8 +290,11 @@ document.querySelector('#app').innerHTML = `
 
     <section class="explore" id="explore" data-figma-node="176:431">
       <img class="explore__background" src="${A}img011.png" alt=""><span class="explore__shade"></span>
-      <div class="explore__ghost">explore more</div><h2>探索智能未来的更多可能</h2>
-      <div class="explore__action">${action('联系我们', '#footer', 'glass')}</div>
+      <div class="explore__ghost">explore more</div>
+      <div class="explore__content">
+        <h2>探索智能未来的更多可能</h2>
+        <div class="explore__action">${action('联系我们', '#footer', 'glass')}</div>
+      </div>
       <img class="explore__orbit" src="${A}imgEllipse12.svg" alt="">
     </section>
 
