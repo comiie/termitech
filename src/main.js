@@ -197,6 +197,7 @@ document.querySelector('#app').innerHTML = `
       </svg>
 
       <div class="loop-orbs" aria-label="拖动切换具身闭环产品">
+      <span class="loop-orbs__connector" aria-hidden="true"></span>
       <div class="loop-orbs__track">
       <div class="loop-orb loop-orb--left">
         <img class="loop-orb__surface" src="${A}loop-circle-200.svg" alt="">
@@ -383,6 +384,7 @@ let mobileLoopStartX = 0;
 let mobileLoopDragX = 0;
 let renderedMobileLoopIndex = null;
 let mobileLoopCopyTimer = 0;
+let mobileLoopConnectorTimer = 0;
 function syncMobileLoopCopy(index) {
   if (!mobileFlow || renderedMobileLoopIndex === index) return;
   const copy = mobileLoopCopy[index];
@@ -402,6 +404,7 @@ function syncMobileLoopCopy(index) {
   mobileLoopCopyTimer = setTimeout(applyCopy, 150);
 }
 function positionMobileLoop(index = mobileLoopIndex) {
+  const previousIndex = mobileLoopIndex;
   mobileLoopIndex = Math.max(0, Math.min(loopInteractiveOrbs.length - 1, index));
   loopInteractiveOrbs.forEach((orb, orbIndex) => orb.classList.toggle('is-mobile-active', orbIndex === mobileLoopIndex));
   const sides = ['left', 'center', 'right'];
@@ -413,6 +416,13 @@ function positionMobileLoop(index = mobileLoopIndex) {
     const offset = loopOrbsViewport.clientWidth / 2 - (activeOrb.offsetLeft + activeOrb.offsetWidth / 2);
     loopOrbsTrack.style.setProperty('--loop-offset', `${offset}px`);
     loopOrbsTrack.style.setProperty('--loop-drag', '0px');
+    if (previousIndex !== mobileLoopIndex) {
+      clearTimeout(mobileLoopConnectorTimer);
+      loopOrbsViewport.classList.remove('is-extending');
+      void loopOrbsViewport.offsetWidth;
+      loopOrbsViewport.classList.add('is-extending');
+      mobileLoopConnectorTimer = setTimeout(() => loopOrbsViewport.classList.remove('is-extending'), 680);
+    }
   });
 }
 loopOrbsViewport.tabIndex = 0;
