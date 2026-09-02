@@ -14,12 +14,12 @@ const action = (label, href, tone = 'light') => `
       <span class="action__label-copy action__label-copy--enter" aria-hidden="true">${label}</span>
     </span>
     <span class="action__badge action__badge--leave" aria-hidden="true">
-      <img class="action__mask" src="${A}button-diffuse.png" alt="">
+      <img class="action__mask" src="${A}button-diffuse.webp" alt="">
       <img class="action__arrow action__arrow--leave" src="${A}imgFrame1.svg" alt="">
       <img class="action__arrow action__arrow--enter" src="${A}imgFrame1.svg" alt="">
     </span>
     <span class="action__badge action__badge--enter" aria-hidden="true">
-      <img class="action__mask" src="${A}button-diffuse.png" alt="">
+      <img class="action__mask" src="${A}button-diffuse.webp" alt="">
       <img class="action__arrow action__arrow--leave" src="${A}imgFrame1.svg" alt="">
       <img class="action__arrow action__arrow--enter" src="${A}imgFrame1.svg" alt="">
     </span>
@@ -60,21 +60,21 @@ const sectionTitle = (eyebrow, title, inverted = false) => `
   </div>`;
 
 const partnerLogos = [
-  { src: 'imgImage6.png', name: 'HMM', filter: 'invert(17%) sepia(41%) saturate(1812%) hue-rotate(185deg) brightness(72%) contrast(105%)' },
-  { src: 'imgAirIndia1.png', name: 'Air India', filter: 'none' },
-  { src: 'imgImage7.png', name: 'United Airlines', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage8.png', name: 'Hamburg Süd', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage9.png', name: 'CMA CGM', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage10.png', name: 'K Line', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage11.png', name: 'COSCO Shipping', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage12.png', name: 'Evergreen Line', filter: 'invert(32%) sepia(46%) saturate(1124%) hue-rotate(111deg) brightness(91%) contrast(98%)' },
-  { src: 'imgImage13.png', name: 'Yang Ming', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage14.png', name: 'PIL', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage15.png', name: 'Malaysia Airlines', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage16.png', name: 'Fiji Airways', filter: 'invert(70%) sepia(66%) saturate(687%) hue-rotate(358deg) brightness(93%) contrast(93%)' },
-  { src: 'imgImage17.png', name: 'British Airways', filter: 'invert(17%) sepia(41%) saturate(1812%) hue-rotate(185deg) brightness(72%) contrast(105%)' },
-  { src: 'imgImage18.png', name: 'Vietnam Airlines', filter: 'invert(70%) sepia(66%) saturate(687%) hue-rotate(358deg) brightness(93%) contrast(93%)' },
-  { src: 'imgImage19.png', name: 'Air China', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
+  { src: 'imgImage6.webp', name: 'HMM', filter: 'invert(17%) sepia(41%) saturate(1812%) hue-rotate(185deg) brightness(72%) contrast(105%)' },
+  { src: 'imgAirIndia1.webp', name: 'Air India', filter: 'none' },
+  { src: 'imgImage7.webp', name: 'United Airlines', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
+  { src: 'imgImage8.webp', name: 'Hamburg Süd', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
+  { src: 'imgImage9.webp', name: 'CMA CGM', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
+  { src: 'imgImage10.webp', name: 'K Line', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
+  { src: 'imgImage11.webp', name: 'COSCO Shipping', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
+  { src: 'imgImage12.webp', name: 'Evergreen Line', filter: 'invert(32%) sepia(46%) saturate(1124%) hue-rotate(111deg) brightness(91%) contrast(98%)' },
+  { src: 'imgImage13.webp', name: 'Yang Ming', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
+  { src: 'imgImage14.webp', name: 'PIL', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
+  { src: 'imgImage15.webp', name: 'Malaysia Airlines', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
+  { src: 'imgImage16.webp', name: 'Fiji Airways', filter: 'invert(70%) sepia(66%) saturate(687%) hue-rotate(358deg) brightness(93%) contrast(93%)' },
+  { src: 'imgImage17.webp', name: 'British Airways', filter: 'invert(17%) sepia(41%) saturate(1812%) hue-rotate(185deg) brightness(72%) contrast(105%)' },
+  { src: 'imgImage18.webp', name: 'Vietnam Airlines', filter: 'invert(70%) sepia(66%) saturate(687%) hue-rotate(358deg) brightness(93%) contrast(93%)' },
+  { src: 'imgImage19.webp', name: 'Air China', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
 ];
 
 const partnerCells = partnerLogos.map((logo, index) => {
@@ -88,10 +88,10 @@ const partnerCells = partnerLogos.map((logo, index) => {
 }).join('');
 
 const news = [
-  { x: 80, title: '再下一城，晨昏线获得中国机器人行业年会“灵巧手最佳适配奖”', image: 'img3DRenderingIndustry40Concept1.png', imageClass: 'news-image--one' },
-  { x: 526, title: '晨昏线斩获深圳智能机器人灵巧手大赛人气团队奖', image: 'img4435169A1.png', imageClass: 'news-image--two' },
-  { x: 972, title: '说啥弹啥，晨昏线钢琴大师TermiPianist带你走进美妙的钢琴世界', image: 'imgHumanWithNeuralHandProsthesisPlayingPiano1.png', imageClass: 'news-image--three' },
-  { x: 1418, title: '具身智能加速进入真实世界，机器人如何从“理解”走向“行动”', image: 'img7209Fbea1.png', imageClass: 'news-image--four' },
+  { x: 80, title: '再下一城，晨昏线获得中国机器人行业年会“灵巧手最佳适配奖”', image: 'img3DRenderingIndustry40Concept1.webp', imageClass: 'news-image--one' },
+  { x: 526, title: '晨昏线斩获深圳智能机器人灵巧手大赛人气团队奖', image: 'img4435169A1.webp', imageClass: 'news-image--two' },
+  { x: 972, title: '说啥弹啥，晨昏线钢琴大师TermiPianist带你走进美妙的钢琴世界', image: 'imgHumanWithNeuralHandProsthesisPlayingPiano1.webp', imageClass: 'news-image--three' },
+  { x: 1418, title: '具身智能加速进入真实世界，机器人如何从“理解”走向“行动”', image: 'img7209Fbea1.webp', imageClass: 'news-image--four' },
 ];
 
 const newsCards = news.map((item, index) => `<article class="news-card" style="left:${item.x}px;--news-delay:${.14 + index * .06}s">
@@ -100,10 +100,10 @@ const newsCards = news.map((item, index) => `<article class="news-card" style="l
 </article>`).join('');
 
 const products = [
-  { name: 'TermiDataCube', title: '具身数据采集系统', description: '面向机器人训练，构建高质量具身数据基础。', image: 'img11.png', mobileImage: 'img11-single.png', imageClass: 'product-card__image--datacube' },
-  { name: 'TermiBrain', title: '具身大脑系列', description: '融合感知、决策与控制，驱动机器人自主作业。', image: 'img521.png', imageClass: 'product-card__image--brain' },
-  { name: 'TermiBot', title: '具身硬件系列', description: '面向多场景任务，实现自主导航与精细作业。', image: 'img21.png', imageClass: 'product-card__image--bot' },
-  { name: 'TermiMaster', title: '多机集群作业平台', description: '统一管理异构设备，实现多机智能协同。', image: 'termimaster-dashboard.png', imageClass: 'product-card__image--master' },
+  { name: 'TermiDataCube', title: '具身数据采集系统', description: '面向机器人训练，构建高质量具身数据基础。', image: 'img11.webp', mobileImage: 'img11-single.webp', imageClass: 'product-card__image--datacube' },
+  { name: 'TermiBrain', title: '具身大脑系列', description: '融合感知、决策与控制，驱动机器人自主作业。', image: 'img521.webp', imageClass: 'product-card__image--brain' },
+  { name: 'TermiBot', title: '具身硬件系列', description: '面向多场景任务，实现自主导航与精细作业。', image: 'img21.webp', imageClass: 'product-card__image--bot' },
+  { name: 'TermiMaster', title: '多机集群作业平台', description: '统一管理异构设备，实现多机智能协同。', image: 'termimaster-dashboard.webp', imageClass: 'product-card__image--master' },
 ];
 
 const productCards = products.map((item, index) => `<article class="product-card product-card--${index + 1}" data-product-index="${index}">
@@ -116,16 +116,16 @@ const productCards = products.map((item, index) => `<article class="product-card
 document.querySelector('#app').innerHTML = `
   <div class="viewport"><main class="canvas" id="canvas">
     <section class="hero" id="home" data-figma-node="176:3">
-      <video class="hero__video" poster="${A}hero-earth.png" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-        <source src="${A}hero-video.mp4" type="video/mp4">
+      <video class="hero__video" poster="${A}hero-earth.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="${A}hero-video.webm" type="video/webm">
       </video>
       <span class="hero__veil" aria-hidden="true"></span>
-      <img class="hero__glow" src="${A}imgRectangle1430107004.png" alt="">
+      <img class="hero__glow" src="${A}imgRectangle1430107004.webp" alt="">
       <header class="header header--top">
         <div class="header__bar">
           <a class="brand" href="#home" aria-label="TermiTech 首页">
-            <img class="brand__image brand__image--hero" src="${A}header-logo.png" alt="TermiTech">
-            <span class="brand__image brand__image--solid" aria-hidden="true"><img src="${A}brand-symbol.png" alt=""><img src="${A}brand-word.svg" alt=""></span>
+            <img class="brand__image brand__image--hero" src="${A}header-logo.webp" alt="TermiTech">
+            <span class="brand__image brand__image--solid" aria-hidden="true"><img src="${A}brand-symbol.webp" alt=""><img src="${A}brand-word.svg" alt=""></span>
           </a>
           <button class="mobile-menu-toggle" type="button" aria-label="打开导航" aria-expanded="false"><i></i><i></i></button>
           <nav class="hero-nav" aria-label="主导航"><a href="#about" data-i18n="about">关于我们</a><a href="#products" data-i18n="products">产品中心</a><a href="#solutions" data-i18n="solutions">解决方案</a><a href="#partners" data-i18n="cases">案例中心</a><a href="#news" data-i18n="news">新闻动态</a><a href="#footer" data-i18n="join">加入我们</a><div class="hero-nav__languages" aria-label="语言切换"><button type="button" data-language="zh">中文</button><button type="button" data-language="en">EN</button></div></nav>
@@ -143,16 +143,16 @@ document.querySelector('#app').innerHTML = `
       <p class="hero__intro" data-i18n="heroIntro">晨昏线专注于精密柔性操作与具身智能技术研发，让智能系统从感知走向执行，<br>实现复杂环境下更加自然、高效的智能交互。</p>
       <div class="hero__action">${action('探索解决方法', '#solutions', 'dark')}</div>
       <div class="hero-cards" tabindex="0" aria-label="机器人自主作业视频卡片，悬停或聚焦展开">
-        <article class="hero-card hero-card--back" tabindex="0" aria-label="播放灵巧操作视频" data-video="${A}hero-video.mp4">
-          <div class="hero-card__media"><img src="${A}imgHumanWithNeuralHandProsthesisPlayingPiano1.png" alt="灵巧机械手精细操作"><span class="hero-card__play" aria-hidden="true"></span></div>
+        <article class="hero-card hero-card--back" tabindex="0" aria-label="播放灵巧操作视频" data-video="${A}hero-video.webm">
+          <div class="hero-card__media"><img src="${A}imgHumanWithNeuralHandProsthesisPlayingPiano1.webp" alt="灵巧机械手精细操作"><span class="hero-card__play" aria-hidden="true"></span></div>
           <p data-i18n="cardBack">灵巧操作与多模态协同：<br>机器人精细作业演示</p><time>03:28</time>
         </article>
-        <article class="hero-card hero-card--middle" tabindex="0" aria-label="播放柔性分拣视频" data-video="${A}hero-video.mp4">
-          <div class="hero-card__media"><img src="${A}imgRobotArmPicksUpBoxAutonomousRobot1.png" alt="机器人柔性分拣"><span class="hero-card__play" aria-hidden="true"></span></div>
+        <article class="hero-card hero-card--middle" tabindex="0" aria-label="播放柔性分拣视频" data-video="${A}hero-video.webm">
+          <div class="hero-card__media"><img src="${A}imgRobotArmPicksUpBoxAutonomousRobot1.webp" alt="机器人柔性分拣"><span class="hero-card__play" aria-hidden="true"></span></div>
           <p data-i18n="cardMiddle">精密分拣与柔性抓取：<br>具身智能产线实测</p><time>05:46</time>
         </article>
-        <article class="hero-card hero-card--front" tabindex="0" aria-label="播放机器人自主作业视频" data-video="${A}hero-video.mp4">
-          <div class="hero-card__media"><img src="${A}imgKvDesktop1.png" alt="机器人自主作业实录"><span class="hero-card__play" aria-hidden="true"></span></div>
+        <article class="hero-card hero-card--front" tabindex="0" aria-label="播放机器人自主作业视频" data-video="${A}hero-video.webm">
+          <div class="hero-card__media"><img src="${A}imgKvDesktop1.webp" alt="机器人自主作业实录"><span class="hero-card__play" aria-hidden="true"></span></div>
           <p data-i18n="cardFront">从感知、决策到执行：<br>机器人自主作业实录</p><time>08:12</time>
         </article>
       </div>
@@ -200,7 +200,7 @@ document.querySelector('#app').innerHTML = `
       <div class="loop-orbs__track">
       <div class="loop-orb loop-orb--left">
         <img class="loop-orb__surface" src="${A}loop-circle-200.svg" alt="">
-        <div class="loop-orb__crop"><img src="${A}loop-datacube-right.png" alt="TermiBot 灵巧机器人"></div>
+        <div class="loop-orb__crop"><img src="${A}loop-datacube-right.webp" alt="TermiBot 灵巧机器人"></div>
       </div>
       <span class="loop-orb-hover-ring loop-orb-hover-ring--left" aria-hidden="true"></span>
       <div class="loop-hover-detail loop-hover-detail--left" aria-hidden="true">
@@ -214,12 +214,12 @@ document.querySelector('#app').innerHTML = `
       </div>
       <div class="loop-orb loop-orb--center">
         <img class="loop-orb__surface" src="${A}loop-circle-240.svg" alt="">
-        <div class="loop-orb__crop"><img src="${A}loop-hand.png" alt="灵巧手"></div>
+        <div class="loop-orb__crop"><img src="${A}loop-hand.webp" alt="灵巧手"></div>
       </div>
-      <img class="loop-orb__ring" src="${A}loop-center-ring.png" alt="">
+      <img class="loop-orb__ring" src="${A}loop-center-ring.webp" alt="">
       <div class="loop-orb loop-orb--right">
         <img class="loop-orb__surface" src="${A}loop-circle-200.svg" alt="">
-        <div class="loop-orb__crop"><img src="${A}loop-datacube-left.png" alt="TermiDataCube 具身数据采集设备"></div>
+        <div class="loop-orb__crop"><img src="${A}loop-datacube-left.webp" alt="TermiDataCube 具身数据采集设备"></div>
       </div>
       <span class="loop-orb-hover-ring loop-orb-hover-ring--right" aria-hidden="true"></span>
       <div class="loop-hover-detail loop-hover-detail--right" aria-hidden="true">
@@ -240,21 +240,21 @@ document.querySelector('#app').innerHTML = `
         <h2 class="solutions__typewriter" aria-label="Built for the Real World"><span class="solutions__title-line">${typewriterMarkup('Built for the ', 0, 24)}</span><span class="solutions__title-line solutions__title-line--real">${typewriterMarkup('Real World', 14, 24)}</span></h2>
         <div class="solutions__stack">
           <article class="solution-scene solution-scene--one" style="--scene-index:0">
-            <div class="solution-scene__media"><img src="${A}imgRobotArmPicksUpBoxAutonomousRobot1.png" alt="智能机器人柔性分拣作业"></div>
+            <div class="solution-scene__media"><img src="${A}imgRobotArmPicksUpBoxAutonomousRobot1.webp" alt="智能机器人柔性分拣作业"></div>
             <div class="solution-scene__copy">
               <h3>智能分拣</h3>
               <p>通过视觉感知与自主决策闭环，让机器人在复杂产线中完成柔性识别、抓取与分流。</p>
             </div>
           </article>
           <article class="solution-scene solution-scene--two" style="--scene-index:1">
-            <div class="solution-scene__media"><img src="${A}img3DRenderingIndustry40Concept1.png" alt="机器人灵巧协作作业"></div>
+            <div class="solution-scene__media"><img src="${A}img3DRenderingIndustry40Concept1.webp" alt="机器人灵巧协作作业"></div>
             <div class="solution-scene__copy">
               <h3>灵巧协作</h3>
               <p>融合具身大脑与精细控制能力，让机器人在开放环境中理解任务并完成稳定操作。</p>
             </div>
           </article>
           <article class="solution-scene solution-scene--three" style="--scene-index:2">
-            <div class="solution-scene__media"><img src="${A}imgWecomTemp4550991F142Db8Cb3Ba936Cec68D87Aad49C3A71.png" alt="多机集群协同作业平台"></div>
+            <div class="solution-scene__media"><img src="${A}imgWecomTemp4550991F142Db8Cb3Ba936Cec68D87Aad49C3A71.webp" alt="多机集群协同作业平台"></div>
             <div class="solution-scene__veil" aria-hidden="true"></div>
             <div class="solution-scene__final">
               <h3>多机协同，释放群体智能</h3>
@@ -267,7 +267,7 @@ document.querySelector('#app').innerHTML = `
     </section>
 
     <section class="about" id="about" data-figma-node="176:268">
-      <div class="about__background"><img src="${A}imgTheGlobalTravelAndTourismIndustryIsResponsibleForAbout45BillionTonsOfEquivalentCarbonDioxideEmissionsAYear1.png" alt=""><span></span></div>
+      <div class="about__background"><img src="${A}imgTheGlobalTravelAndTourismIndustryIsResponsibleForAbout45BillionTonsOfEquivalentCarbonDioxideEmissionsAYear1.webp" alt=""><span></span></div>
       ${sectionTitle('about us', '关于我们', true)}
       <p class="about__intro">晨昏线科技致力于构建具身机器人大脑，以跨本体、跨品牌的通用适配能力为己任，打破硬件壁垒，让智能真正流动。</p>
       <div class="about__action">${action('了解更多', '#about', 'glass')}</div>
@@ -289,7 +289,7 @@ document.querySelector('#app').innerHTML = `
     </section>
 
     <section class="explore" id="explore" data-figma-node="176:431">
-      <img class="explore__background" src="${A}img011.png" alt=""><span class="explore__shade"></span>
+      <img class="explore__background" src="${A}img011.webp" alt=""><span class="explore__shade"></span>
       <div class="explore__ghost">explore more</div>
       <div class="explore__content">
         <h2>探索智能未来的更多可能</h2>
