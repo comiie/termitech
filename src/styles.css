@@ -716,6 +716,13 @@
 .explore--entered h2{transform:translate3d(-50%,0,0)}
 .explore--entered .explore__action,
 .explore--entered .explore__orbit{transform:translate3d(0,0,0)}
+.explore .action--glass .action__label{
+  background:rgba(255,255,255,.17);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 8px 24px rgba(26,12,18,.08);
+  backdrop-filter:blur(30px) saturate(1.16);
+  -webkit-backdrop-filter:blur(30px) saturate(1.16);
+}
 
 /* Footer — staggered reveal, with colour appearing only under the pointer. */
 .footer-nav,
@@ -1258,7 +1265,7 @@
   .news-action .action__badge--leave{grid-column:2!important}
   .news-action .action__badge--enter{grid-column:1!important}
 
-  .explore__ghost{left:0!important;top:40px!important;width:100%!important;font-size:clamp(76px,21vw,110px)!important;text-align:center}
+  .explore__ghost{left:0!important;top:40px!important;width:100%!important;font-size:clamp(40px,13.5vw,94px)!important;text-align:center}
   .explore__content{position:absolute;left:var(--responsive-gutter);right:var(--responsive-gutter);top:98px;z-index:2;display:grid;grid-template-rows:40px 40px;justify-items:center;row-gap:32px}
   .explore__content h2{position:relative;left:auto!important;top:auto!important;width:100%;font-size:clamp(21px,6.6vw,32px);text-align:center;white-space:nowrap;transform:none!important}
   .explore__content .explore__action{position:relative;left:auto!important;right:auto!important;top:auto!important;width:max-content;translate:none!important;transform:none!important}
