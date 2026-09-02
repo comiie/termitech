@@ -48,10 +48,10 @@ const backOut = progress => {
   return 1 + (overshoot + 1) * shifted ** 3 + overshoot * shifted ** 2;
 };
 
-const typewriterMarkup = text => [...text].map((character, index, characters) => {
-  const progress = characters.length > 1 ? index / (characters.length - 1) : 0;
+const typewriterMarkup = (text, startIndex = 0, totalLength = text.length) => [...text].map((character, index) => {
+  const progress = totalLength > 1 ? (startIndex + index) / (totalLength - 1) : 0;
   return `
-  <span class="solutions__type-char${character === ' ' ? ' solutions__type-char--space' : ''}" style="--char-index:${index};--char-color:${titleGradientColor(progress)}" aria-hidden="true">${character === ' ' ? '&nbsp;' : character}</span>`;
+  <span class="solutions__type-char${character === ' ' ? ' solutions__type-char--space' : ''}" style="--char-index:${startIndex + index};--char-color:${titleGradientColor(progress)}" aria-hidden="true">${character === ' ' ? '&nbsp;' : character}</span>`;
 }).join('');
 
 const sectionTitle = (eyebrow, title, inverted = false) => `
@@ -237,7 +237,7 @@ document.querySelector('#app').innerHTML = `
 
     <section class="solutions" id="solutions" data-figma-node="131:1060">
       <div class="solutions__stage">
-        <h2 class="solutions__typewriter" aria-label="Built for the Real World">${typewriterMarkup('Built for the Real World')}</h2>
+        <h2 class="solutions__typewriter" aria-label="Built for the Real World"><span class="solutions__title-line">${typewriterMarkup('Built for the ', 0, 24)}</span><span class="solutions__title-line solutions__title-line--real">${typewriterMarkup('Real World', 14, 24)}</span></h2>
         <div class="solutions__stack">
           <article class="solution-scene solution-scene--one" style="--scene-index:0">
             <div class="solution-scene__media"><img src="${A}imgRobotArmPicksUpBoxAutonomousRobot1.png" alt="智能机器人柔性分拣作业"></div>
@@ -356,15 +356,57 @@ const loopWaveDots = [...document.querySelectorAll('[data-wave-dot]')];
 const loopOrbsViewport = document.querySelector('.loop-orbs');
 const loopOrbsTrack = document.querySelector('.loop-orbs__track');
 const loopInteractiveOrbs = [...document.querySelectorAll('.loop-orb--left, .loop-orb--center, .loop-orb--right')];
+const loopStep = document.querySelector('.loop-step');
+const loopStepIndex = loopStep.querySelector('.loop-step__index');
+const loopStepTitle = loopStep.querySelector('h3');
+const loopStepDescription = loopStep.querySelector('p');
+const mobileLoopCopy = [
+  {
+    index: '01',
+    title: '数据积累',
+    description: '以TermiDataCube为核心，提供任务驱动的具身数据采集能力，解决真机数据稀缺、获取成本高的痛点，为模型持续提供高质量训练数据。',
+  },
+  {
+    index: '02',
+    title: '模型迭代',
+    description: '以TermiBrain（机器人大脑）与TermiBot（灵巧机器人）为核心，让模型实现跨具身本体、跨算力平台部署，提升推理速度与交互能力。',
+  },
+  {
+    index: '03',
+    title: '场景验证',
+    description: '以TermiMaster为核心，从单体智能走向群体智能，支撑多机器人规模化作业，并通过场景数据推动模型持续学习与演进。',
+  },
+];
 let mobileLoopIndex = 1;
 let mobileLoopPointer = null;
 let mobileLoopStartX = 0;
 let mobileLoopDragX = 0;
+let renderedMobileLoopIndex = null;
+let mobileLoopCopyTimer = 0;
+function syncMobileLoopCopy(index) {
+  if (!mobileFlow || renderedMobileLoopIndex === index) return;
+  const copy = mobileLoopCopy[index];
+  const applyCopy = () => {
+    loopStepIndex.textContent = copy.index;
+    loopStepTitle.textContent = copy.title;
+    loopStepDescription.textContent = copy.description;
+    renderedMobileLoopIndex = index;
+    requestAnimationFrame(() => loopStep.classList.remove('loop-step--changing'));
+  };
+  clearTimeout(mobileLoopCopyTimer);
+  if (renderedMobileLoopIndex === null || reduceMotion.matches) {
+    applyCopy();
+    return;
+  }
+  loopStep.classList.add('loop-step--changing');
+  mobileLoopCopyTimer = setTimeout(applyCopy, 150);
+}
 function positionMobileLoop(index = mobileLoopIndex) {
   mobileLoopIndex = Math.max(0, Math.min(loopInteractiveOrbs.length - 1, index));
   loopInteractiveOrbs.forEach((orb, orbIndex) => orb.classList.toggle('is-mobile-active', orbIndex === mobileLoopIndex));
   const sides = ['left', 'center', 'right'];
   if (mobileFlow) embodiedLoopSection.dataset.activeOrb = sides[mobileLoopIndex];
+  syncMobileLoopCopy(mobileLoopIndex);
   requestAnimationFrame(() => {
     if (!mobileFlow) return;
     const activeOrb = loopInteractiveOrbs[mobileLoopIndex];
