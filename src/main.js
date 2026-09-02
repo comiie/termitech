@@ -361,6 +361,7 @@ const loopOrbsViewport = document.querySelector('.loop-orbs');
 const loopOrbsTrack = document.querySelector('.loop-orbs__track');
 const loopInteractiveOrbs = [...document.querySelectorAll('.loop-orb--left, .loop-orb--center, .loop-orb--right')];
 const loopStep = document.querySelector('.loop-step');
+const loopStepLine = loopStep.querySelector('.loop-step__line');
 const loopStepIndex = loopStep.querySelector('.loop-step__index');
 const loopStepTitle = loopStep.querySelector('h3');
 const loopStepDescription = loopStep.querySelector('p');
@@ -420,6 +421,7 @@ function positionMobileLoop(index = mobileLoopIndex) {
     const offset = loopOrbsViewport.clientWidth / 2 - (activeOrb.offsetLeft + activeOrb.offsetWidth / 2);
     loopOrbsTrack.style.setProperty('--loop-offset', `${offset}px`);
     loopOrbsTrack.style.setProperty('--loop-drag', '0px');
+    embodiedLoopSection.style.setProperty('--loop-dot-travel', `${loopStepLine.offsetHeight}px`);
     if (previousIndex !== mobileLoopIndex) {
       clearTimeout(mobileLoopExtensionTimer);
       embodiedLoopSection.classList.remove('embodied-loop--extending');

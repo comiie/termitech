@@ -1215,7 +1215,12 @@
   .embodied-loop__waves{left:calc(50% - 960px)!important;bottom:20px!important;width:1920px!important;height:125px!important;max-width:none;transform:none!important}
   .loop-step__line{height:max(175px,calc(100% - 539px))}
   .embodied-loop--extending .loop-step__line{animation:loop-step-extend .68s cubic-bezier(.4,0,.2,1)}
+  .embodied-loop--extending .loop-step__dot{animation:loop-step-dot-extend .68s cubic-bezier(.4,0,.2,1)}
   @keyframes loop-step-extend{0%{clip-path:inset(100% 0 0 0)}100%{clip-path:inset(0)}}
+  @keyframes loop-step-dot-extend{0%{translate:0 var(--loop-dot-travel)}100%{translate:0 0}}
+  @media(prefers-reduced-motion:reduce){
+    .embodied-loop--extending .loop-step__line,.embodied-loop--extending .loop-step__dot{animation:none!important}
+  }
   .loop-step__index,.loop-step h3,.loop-step p{transition:opacity .18s ease,transform .28s cubic-bezier(.22,1,.36,1)!important}
   .embodied-loop .loop-step.loop-step--changing .loop-step__index,
   .embodied-loop .loop-step.loop-step--changing h3,
