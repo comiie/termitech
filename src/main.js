@@ -100,7 +100,7 @@ const newsCards = news.map((item, index) => `<article class="news-card" style="l
 </article>`).join('');
 
 const products = [
-  { name: 'TermiDataCube', title: '具身数据采集系统', description: '面向机器人训练，构建高质量具身数据基础。', image: 'img11.png', imageClass: 'product-card__image--datacube' },
+  { name: 'TermiDataCube', title: '具身数据采集系统', description: '面向机器人训练，构建高质量具身数据基础。', image: 'img11.png', mobileImage: 'img11-single.png', imageClass: 'product-card__image--datacube' },
   { name: 'TermiBrain', title: '具身大脑系列', description: '融合感知、决策与控制，驱动机器人自主作业。', image: 'img521.png', imageClass: 'product-card__image--brain' },
   { name: 'TermiBot', title: '具身硬件系列', description: '面向多场景任务，实现自主导航与精细作业。', image: 'img21.png', imageClass: 'product-card__image--bot' },
   { name: 'TermiMaster', title: '多机集群作业平台', description: '统一管理异构设备，实现多机智能协同。', image: 'termimaster-dashboard.png', imageClass: 'product-card__image--master' },
@@ -108,7 +108,7 @@ const products = [
 
 const productCards = products.map((item, index) => `<article class="product-card product-card--${index + 1}" data-product-index="${index}">
   <span class="product-card__surface" aria-hidden="true"></span>
-  <div class="product-card__media"><img class="${item.imageClass}" src="${A}${item.image}" alt="${item.name} ${item.title}"></div>
+  <div class="product-card__media"><picture>${item.mobileImage ? `<source media="(max-width: 1024px)" srcset="${A}${item.mobileImage}">` : ''}<img class="${item.imageClass}" src="${A}${item.image}" alt="${item.name} ${item.title}"></picture></div>
   <div class="product-card__copy"><p>${item.name}</p><h3>${item.title}</h3><span>${item.description}</span></div>
   <a class="product-arrow" href="#products" aria-label="了解 ${item.name}"><img class="product-arrow__icon product-arrow__icon--leave" src="${A}imgFrame2.svg" alt=""><img class="product-arrow__icon product-arrow__icon--enter" src="${A}imgFrame2.svg" alt=""></a>
 </article>`).join('');
@@ -128,7 +128,7 @@ document.querySelector('#app').innerHTML = `
             <span class="brand__image brand__image--solid" aria-hidden="true"><img src="${A}brand-symbol.png" alt=""><img src="${A}brand-word.svg" alt=""></span>
           </a>
           <button class="mobile-menu-toggle" type="button" aria-label="打开导航" aria-expanded="false"><i></i><i></i></button>
-          <nav class="hero-nav" aria-label="主导航"><a href="#about" data-i18n="about">关于我们</a><a href="#products" data-i18n="products">产品中心</a><a href="#solutions" data-i18n="solutions">解决方案</a><a href="#partners" data-i18n="cases">案例中心</a><a href="#news" data-i18n="news">新闻动态</a><a href="#footer" data-i18n="join">加入我们</a><a class="hero-nav__mobile-contact" href="#explore" data-i18n="contact">联系我们</a></nav>
+          <nav class="hero-nav" aria-label="主导航"><a href="#about" data-i18n="about">关于我们</a><a href="#products" data-i18n="products">产品中心</a><a href="#solutions" data-i18n="solutions">解决方案</a><a href="#partners" data-i18n="cases">案例中心</a><a href="#news" data-i18n="news">新闻动态</a><a href="#footer" data-i18n="join">加入我们</a><div class="hero-nav__languages" aria-label="语言切换"><button type="button" data-language="zh">中文</button><button type="button" data-language="en">EN</button></div></nav>
           <div class="language-picker">
             <button class="language-picker__trigger" type="button" aria-haspopup="listbox" aria-expanded="false"><span>中</span><i aria-hidden="true"></i></button>
             <div class="language-picker__menu" role="listbox" aria-label="语言选择">
@@ -196,6 +196,8 @@ document.querySelector('#app').innerHTML = `
         <circle class="loop-wave-dot loop-wave-dot--lavender" data-wave-dot="2" data-wave-x="1265" r="5"></circle>
       </svg>
 
+      <div class="loop-orbs" aria-label="拖动切换具身闭环产品">
+      <div class="loop-orbs__track">
       <div class="loop-orb loop-orb--left">
         <img class="loop-orb__surface" src="${A}loop-circle-200.svg" alt="">
         <div class="loop-orb__crop"><img src="${A}loop-datacube-right.png" alt="TermiBot 灵巧机器人"></div>
@@ -228,6 +230,8 @@ document.querySelector('#app').innerHTML = `
           <h3>场景验证</h3>
           <p><span>以TermiMaster为核心,从单体智能到群体智能</span><span>支撑多机器人规模化作业,通过场景数据实现数据飞轮</span><span>与具身模型重训练,使具身模型自学习自演进。</span></p>
         </div>
+      </div>
+      </div>
       </div>
     </section>
 
@@ -349,7 +353,58 @@ aboutMetrics.forEach(metric => {
 });
 const loopWavePaths = [...document.querySelectorAll('[data-wave-line]')];
 const loopWaveDots = [...document.querySelectorAll('[data-wave-dot]')];
+const loopOrbsViewport = document.querySelector('.loop-orbs');
+const loopOrbsTrack = document.querySelector('.loop-orbs__track');
 const loopInteractiveOrbs = [...document.querySelectorAll('.loop-orb--left, .loop-orb--center, .loop-orb--right')];
+let mobileLoopIndex = 1;
+let mobileLoopPointer = null;
+let mobileLoopStartX = 0;
+let mobileLoopDragX = 0;
+function positionMobileLoop(index = mobileLoopIndex) {
+  mobileLoopIndex = Math.max(0, Math.min(loopInteractiveOrbs.length - 1, index));
+  loopInteractiveOrbs.forEach((orb, orbIndex) => orb.classList.toggle('is-mobile-active', orbIndex === mobileLoopIndex));
+  const sides = ['left', 'center', 'right'];
+  if (mobileFlow) embodiedLoopSection.dataset.activeOrb = sides[mobileLoopIndex];
+  requestAnimationFrame(() => {
+    if (!mobileFlow) return;
+    const activeOrb = loopInteractiveOrbs[mobileLoopIndex];
+    const offset = loopOrbsViewport.clientWidth / 2 - (activeOrb.offsetLeft + activeOrb.offsetWidth / 2);
+    loopOrbsTrack.style.setProperty('--loop-offset', `${offset}px`);
+    loopOrbsTrack.style.setProperty('--loop-drag', '0px');
+  });
+}
+loopOrbsViewport.tabIndex = 0;
+loopOrbsViewport.addEventListener('pointerdown', event => {
+  if (!mobileFlow) return;
+  mobileLoopPointer = event.pointerId;
+  mobileLoopStartX = event.clientX;
+  mobileLoopDragX = 0;
+  loopOrbsViewport.setPointerCapture(event.pointerId);
+  loopOrbsViewport.classList.add('is-dragging');
+});
+loopOrbsViewport.addEventListener('pointermove', event => {
+  if (!mobileFlow || event.pointerId !== mobileLoopPointer) return;
+  mobileLoopDragX = event.clientX - mobileLoopStartX;
+  loopOrbsTrack.style.setProperty('--loop-drag', `${mobileLoopDragX}px`);
+  if (Math.abs(mobileLoopDragX) > 8) event.preventDefault();
+});
+function finishMobileLoopDrag(event) {
+  if (event.pointerId !== mobileLoopPointer) return;
+  const tappedOrb = event.target.closest?.('.loop-orb');
+  if (Math.abs(mobileLoopDragX) > 44) positionMobileLoop(mobileLoopIndex + (mobileLoopDragX < 0 ? 1 : -1));
+  else if (tappedOrb) positionMobileLoop(loopInteractiveOrbs.indexOf(tappedOrb));
+  else positionMobileLoop(mobileLoopIndex);
+  mobileLoopPointer = null;
+  mobileLoopDragX = 0;
+  loopOrbsViewport.classList.remove('is-dragging');
+}
+loopOrbsViewport.addEventListener('pointerup', finishMobileLoopDrag);
+loopOrbsViewport.addEventListener('pointercancel', finishMobileLoopDrag);
+loopOrbsViewport.addEventListener('keydown', event => {
+  if (!mobileFlow || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  positionMobileLoop(mobileLoopIndex + (event.key === 'ArrowRight' ? 1 : -1));
+});
 const LOOP_WAVE_WIDTH = 1920;
 const loopWaveConfigs = [
   { base: 70, amplitude: 28, wavelength: 390, speed: 1.8, phase: .15, detailAmplitude: 7, detailWavelength: 920, detailSpeed: -.62 },
@@ -584,6 +639,14 @@ addEventListener('wheel', event => {
 
 addEventListener('scroll', () => {
   const nextScrollY = scrollY;
+  if (mobileFlow) {
+    headerHidden = false;
+    lastScrollY = nextScrollY;
+    header.classList.remove('header--hidden');
+    header.classList.toggle('header--solid', nextScrollY > 4);
+    header.classList.toggle('header--top', nextScrollY <= 4);
+    return;
+  }
   if (Math.abs(nextScrollY - appliedScrollY) > 2) scrollTarget = nextScrollY;
   const delta = nextScrollY - lastScrollY;
   if (nextScrollY <= 4) headerHidden = false;
@@ -634,11 +697,13 @@ function updateMetrics() {
     solutionsSection.style.setProperty('--solutions-height', 'auto');
     canvas.style.height = 'auto';
     document.body.style.height = 'auto';
+    positionMobileLoop(mobileLoopIndex);
     return;
   }
-  heroHeight = compactLayout
-    ? Math.min(naturalScreenHeight, compactScreenCap)
-    : Math.min(SCREEN_HEIGHT, naturalScreenHeight);
+  // Keep the desktop banner exactly one physical viewport tall at every
+  // supported aspect ratio. The canvas is width-scaled, so its design-space
+  // height must be the viewport height divided by that scale.
+  heroHeight = naturalScreenHeight;
   productPinDistance = heroHeight * (compactLayout ? 2.4 : .62);
   productReleaseDistance = heroHeight * .04;
   solutionsPinDistance = heroHeight * (compactLayout ? 2.05 : 1.8);
