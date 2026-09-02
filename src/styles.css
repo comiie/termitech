@@ -717,9 +717,7 @@
 .explore--entered .explore__action,
 .explore--entered .explore__orbit{transform:translate3d(0,0,0)}
 .explore .action--glass .action__label{
-  background:rgba(255,255,255,.17);
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 8px 24px rgba(26,12,18,.08);
+  background:rgba(255,255,255,.2);
   backdrop-filter:blur(30px) saturate(1.16);
   -webkit-backdrop-filter:blur(30px) saturate(1.16);
 }
@@ -1231,7 +1229,7 @@
   .loop-orbs .loop-orb--center .loop-orb__crop img{left:-19px;top:0;width:173px;height:150px}
   .loop-orbs .loop-orb.is-mobile-active::after{content:"";position:absolute;inset:-13px;border:1px dashed rgba(63,61,221,.24);border-radius:50%;pointer-events:none}
   .loop-orbs .loop-orb__ring{display:none!important}
-  .embodied-loop__waves{left:calc(50% - 960px)!important;bottom:20px!important;width:1920px!important;height:125px!important;max-width:none;transform:none!important}
+  .embodied-loop__waves{left:calc(50% - 960px)!important;bottom:95px!important;width:1920px!important;height:125px!important;max-width:none;transform:none!important}
   .loop-step__line{height:max(175px,calc(100% - 539px))}
   .embodied-loop--extending .loop-step__line{animation:loop-step-extend .68s cubic-bezier(.4,0,.2,1)}
   .embodied-loop--extending .loop-step__dot{animation:loop-step-dot-extend .68s cubic-bezier(.4,0,.2,1)}
