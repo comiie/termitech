@@ -197,7 +197,6 @@ document.querySelector('#app').innerHTML = `
       </svg>
 
       <div class="loop-orbs" aria-label="拖动切换具身闭环产品">
-      <span class="loop-orbs__connector" aria-hidden="true"></span>
       <div class="loop-orbs__track">
       <div class="loop-orb loop-orb--left">
         <img class="loop-orb__surface" src="${A}loop-circle-200.svg" alt="">
@@ -389,7 +388,7 @@ let mobileLoopStartX = 0;
 let mobileLoopDragX = 0;
 let renderedMobileLoopIndex = null;
 let mobileLoopCopyTimer = 0;
-let mobileLoopConnectorTimer = 0;
+let mobileLoopExtensionTimer = 0;
 function syncMobileLoopCopy(index) {
   if (!mobileFlow || renderedMobileLoopIndex === index) return;
   const copy = mobileLoopCopy[index];
@@ -422,14 +421,11 @@ function positionMobileLoop(index = mobileLoopIndex) {
     loopOrbsTrack.style.setProperty('--loop-offset', `${offset}px`);
     loopOrbsTrack.style.setProperty('--loop-drag', '0px');
     if (previousIndex !== mobileLoopIndex) {
-      clearTimeout(mobileLoopConnectorTimer);
-      loopOrbsViewport.classList.remove('is-extending');
+      clearTimeout(mobileLoopExtensionTimer);
       embodiedLoopSection.classList.remove('embodied-loop--extending');
-      void loopOrbsViewport.offsetWidth;
-      loopOrbsViewport.classList.add('is-extending');
+      void embodiedLoopSection.offsetWidth;
       embodiedLoopSection.classList.add('embodied-loop--extending');
-      mobileLoopConnectorTimer = setTimeout(() => {
-        loopOrbsViewport.classList.remove('is-extending');
+      mobileLoopExtensionTimer = setTimeout(() => {
         embodiedLoopSection.classList.remove('embodied-loop--extending');
       }, 680);
     }

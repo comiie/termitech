@@ -111,7 +111,6 @@
 .canvas{position:fixed}
 @media print{.canvas{position:static}}
 .loop-orbs,.loop-orbs__track{display:contents}
-.loop-orbs__connector{display:none}
 .mobile-menu-toggle{display:none}
 .hero-nav__languages{display:none}
 .hero-nav__mobile-contact{display:none!important}
@@ -1212,23 +1211,17 @@
   .loop-orbs .loop-orb--center .loop-orb__crop{left:36px;top:19px;width:147px;height:150px}
   .loop-orbs .loop-orb--center .loop-orb__crop img{left:-19px;top:0;width:173px;height:150px}
   .loop-orbs .loop-orb.is-mobile-active::after{content:"";position:absolute;inset:-13px;border:1px dashed rgba(63,61,221,.24);border-radius:50%;pointer-events:none}
-  .loop-orbs__connector{--loop-connector:#9188ef;position:absolute;left:calc(50% - 1px);bottom:-6px;z-index:2;display:block;width:2px;height:42px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0),var(--loop-connector) 38%,var(--loop-connector));opacity:.86;transform:scaleY(1);transform-origin:50% 100%;transition:background .35s ease,opacity .25s ease}
-  .embodied-loop[data-active-orb="left"] .loop-orbs__connector{--loop-connector:#ff8700}
-  .embodied-loop[data-active-orb="center"] .loop-orbs__connector{--loop-connector:#9188ef}
-  .embodied-loop[data-active-orb="right"] .loop-orbs__connector{--loop-connector:#3f3ddd}
-  .loop-orbs.is-extending .loop-orbs__connector{animation:loop-connector-extend .68s cubic-bezier(.22,1,.36,1)}
-  @keyframes loop-connector-extend{0%{opacity:0;transform:scaleY(0)}45%{opacity:1}100%{opacity:.86;transform:scaleY(1)}}
   .loop-orbs .loop-orb__ring{display:none!important}
   .embodied-loop__waves{left:calc(50% - 960px)!important;bottom:20px!important;width:1920px!important;height:125px!important;max-width:none;transform:none!important}
   .loop-step__line{height:max(175px,calc(100% - 539px))}
-  .embodied-loop--extending .loop-step__line{animation:loop-step-extend .68s cubic-bezier(.22,1,.36,1)}
-  @keyframes loop-step-extend{0%{clip-path:inset(0 0 100% 0)}100%{clip-path:inset(0)}}
+  .embodied-loop--extending .loop-step__line{animation:loop-step-extend .68s cubic-bezier(.4,0,.2,1)}
+  @keyframes loop-step-extend{0%{clip-path:inset(100% 0 0 0)}100%{clip-path:inset(0)}}
   .loop-step__index,.loop-step h3,.loop-step p{transition:opacity .18s ease,transform .28s cubic-bezier(.22,1,.36,1)!important}
   .embodied-loop .loop-step.loop-step--changing .loop-step__index,
   .embodied-loop .loop-step.loop-step--changing h3,
   .embodied-loop .loop-step.loop-step--changing p{opacity:0!important;transform:translate3d(0,8px,0)!important}
 
-  .solutions .solutions__typewriter{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:calc(100% - 8px);max-width:100%;font-size:clamp(40px,10.4vw,60px);line-height:1.02;text-align:center;margin-inline:auto}
+  .solutions .solutions__typewriter{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;width:100%;max-width:100%;font-size:clamp(48px,15.5vw,160px);line-height:.94;text-align:center;margin-inline:auto}
   .solutions__title-line{display:flex;justify-content:center;white-space:nowrap}
 
   .about{height:100svh!important;min-height:0!important;padding:clamp(46px,7svh,66px) var(--responsive-gutter) clamp(38px,6svh,64px)}
