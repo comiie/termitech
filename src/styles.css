@@ -824,6 +824,7 @@
   .section-title h2{font-size:48px;line-height:56px}
   .action{font-size:20px}
   .hero__intro,.about__intro,.embodied-loop__lead{font-size:22px;line-height:32px}
+  .hero__intro{width:900px}
 }
 
 @media (min-width:1200px) and (max-width:1366px){
@@ -1176,6 +1177,11 @@
   .partners-news .news-card{height:360px}
   .news-card__media{top:132px;height:228px}
   .product-card{height:600px}
+}
+
+@media (min-width:1020px) and (max-width:1024px){
+  .hero .hero__intro{right:auto;width:900px}
+  .hero .hero__intro br{display:inline}
 }
 
 /* Refined phone/tablet composition and touch interactions. */
