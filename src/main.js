@@ -513,6 +513,7 @@ let activeVideoCard = null;
 let scale = innerWidth / DESIGN_WIDTH;
 let layoutWidth = DESIGN_WIDTH;
 let compactLayout = false;
+let intermediateDesktop = false;
 let mobileFlow = innerWidth <= 1024;
 let heroHeight = SCREEN_HEIGHT;
 let productPinDistance = SCREEN_HEIGHT * 1.94;
@@ -734,10 +735,10 @@ setTimeout(() => {
 function updateMetrics() {
   mobileFlow = innerWidth <= 1024;
   compactLayout = innerWidth <= 1024;
+  intermediateDesktop = innerWidth > 1024 && innerWidth <= 1400;
   layoutWidth = compactLayout ? innerWidth : DESIGN_WIDTH;
-  scale = compactLayout ? 1 : Math.min(1, innerWidth / DESIGN_WIDTH);
-  const canvasOffset = innerWidth > DESIGN_WIDTH ? (innerWidth - DESIGN_WIDTH) / 2 : 0;
-  canvas.style.left = `${canvasOffset}px`;
+  scale = compactLayout ? 1 : innerWidth / DESIGN_WIDTH;
+  canvas.style.left = '0px';
   canvas.style.setProperty('--layout-width', `${layoutWidth}px`);
   canvas.dataset.viewport = innerWidth <= 900
     ? 'mobile'
@@ -771,9 +772,11 @@ function updateMetrics() {
   // supported aspect ratio. The canvas is width-scaled, so its design-space
   // height must be the viewport height divided by that scale.
   heroHeight = naturalScreenHeight;
-  productPinDistance = heroHeight * (compactLayout ? 2.4 : .62);
-  productReleaseDistance = heroHeight * .04;
+  productPinDistance = heroHeight * (intermediateDesktop ? .46 : .62);
+  productReleaseDistance = heroHeight * (intermediateDesktop ? .06 : .04);
   solutionsPinDistance = heroHeight * (compactLayout ? 2.05 : 1.8);
+  embodiedLoopSection.style.setProperty('--loop-step-line-length', `${Math.max(0, heroHeight * .74259259 - 359)}px`);
+  embodiedLoopSection.style.setProperty('--loop-side-line-length', `${Math.max(0, heroHeight * .63055556 - 359)}px`);
   canvas.style.setProperty('--hero-height', `${heroHeight}px`);
   canvas.style.setProperty('--screen-height', `${heroHeight}px`);
   canvas.style.setProperty('--screen-ratio', `${compactLayout ? 1 : Math.min(1, heroHeight / SCREEN_HEIGHT)}`);
@@ -919,7 +922,15 @@ function render(timestamp = performance.now()) {
   const compactCardStep = Math.max(320, layoutWidth - 24);
   const horizontalShift = (compactLayout ? compactCardStep * 3 : 792) * travelProgress;
   const surfaceTops = compactLayout ? [190, 190, 190, 190] : [274, 329, 369, 409];
-  const initialOffsets = compactLayout ? [0, 0, 0, 0] : [0, 40, 60, 80];
+  let initialOffsets = compactLayout ? [0, 0, 0, 0] : [0, 40, 60, 80];
+  if (intermediateDesktop) {
+    const firstSurfaceTop = surfaceTops[0];
+    const availableSlope = (heroHeight - firstSurfaceTop - 460 - 40) / 3;
+    const slopeStep = Math.min(132, Math.max(56, availableSlope));
+    initialOffsets = surfaceTops.map((surfaceTop, index) => (
+      firstSurfaceTop + slopeStep * index - surfaceTop
+    ));
+  }
   const finalSurfaceTop = compactLayout ? 190 : 334;
   const releaseLocal = Math.max(0, productsLocal - travelDistance);
   const releaseProgress = productReleaseDistance
