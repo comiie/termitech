@@ -328,7 +328,11 @@ const productCardElements = [...document.querySelectorAll('.product-card')];
 const embodiedLoopSection = document.querySelector('.embodied-loop');
 const solutionsSection = document.querySelector('.solutions');
 const solutionsStage = document.querySelector('.solutions__stage');
+const solutionsTypewriter = document.querySelector('.solutions__typewriter');
 const solutionsTitleChars = [...document.querySelectorAll('.solutions__type-char')];
+const solutionsTitleLetters = solutionsTitleChars.filter(character => (
+  !character.classList.contains('solutions__type-char--space')
+));
 const solutionScenes = [...document.querySelectorAll('.solution-scene')];
 const solutionSceneProgress = solutionScenes.map(() => 0);
 let solutionTitleProgress = 0;
@@ -380,6 +384,7 @@ const mobileLoopCopy = [
 ];
 let mobileLoopIndex = 1;
 let mobileLoopPointer = null;
+let mobileLoopTappedOrb = null;
 let mobileLoopStartX = 0;
 let mobileLoopDragX = 0;
 let renderedMobileLoopIndex = null;
@@ -419,9 +424,14 @@ function positionMobileLoop(index = mobileLoopIndex) {
     if (previousIndex !== mobileLoopIndex) {
       clearTimeout(mobileLoopConnectorTimer);
       loopOrbsViewport.classList.remove('is-extending');
+      embodiedLoopSection.classList.remove('embodied-loop--extending');
       void loopOrbsViewport.offsetWidth;
       loopOrbsViewport.classList.add('is-extending');
-      mobileLoopConnectorTimer = setTimeout(() => loopOrbsViewport.classList.remove('is-extending'), 680);
+      embodiedLoopSection.classList.add('embodied-loop--extending');
+      mobileLoopConnectorTimer = setTimeout(() => {
+        loopOrbsViewport.classList.remove('is-extending');
+        embodiedLoopSection.classList.remove('embodied-loop--extending');
+      }, 680);
     }
   });
 }
@@ -429,6 +439,7 @@ loopOrbsViewport.tabIndex = 0;
 loopOrbsViewport.addEventListener('pointerdown', event => {
   if (!mobileFlow) return;
   mobileLoopPointer = event.pointerId;
+  mobileLoopTappedOrb = event.target.closest?.('.loop-orb') || null;
   mobileLoopStartX = event.clientX;
   mobileLoopDragX = 0;
   loopOrbsViewport.setPointerCapture(event.pointerId);
@@ -442,11 +453,13 @@ loopOrbsViewport.addEventListener('pointermove', event => {
 });
 function finishMobileLoopDrag(event) {
   if (event.pointerId !== mobileLoopPointer) return;
-  const tappedOrb = event.target.closest?.('.loop-orb');
-  if (Math.abs(mobileLoopDragX) > 44) positionMobileLoop(mobileLoopIndex + (mobileLoopDragX < 0 ? 1 : -1));
+  const tappedOrb = mobileLoopTappedOrb;
+  if (event.type === 'pointercancel') positionMobileLoop(mobileLoopIndex);
+  else if (Math.abs(mobileLoopDragX) > 44) positionMobileLoop(mobileLoopIndex + (mobileLoopDragX < 0 ? 1 : -1));
   else if (tappedOrb) positionMobileLoop(loopInteractiveOrbs.indexOf(tappedOrb));
   else positionMobileLoop(mobileLoopIndex);
   mobileLoopPointer = null;
+  mobileLoopTappedOrb = null;
   mobileLoopDragX = 0;
   loopOrbsViewport.classList.remove('is-dragging');
 }
@@ -472,6 +485,7 @@ loopInteractiveOrbs.forEach(orb => {
   const labels = { left: '查看数据积累', center: '查看模型迭代', right: '查看场景验证' };
   orb.setAttribute('aria-label', labels[side]);
   const activate = () => {
+    if (mobileFlow) return;
     embodiedLoopSection.dataset.activeOrb = side;
   };
   orb.addEventListener('pointerenter', activate);
@@ -815,9 +829,27 @@ function renderMobile(timestamp) {
     card.style.clipPath = 'none';
   });
   solutionsStage.style.transform = 'none';
+  const mobileTitleRect = solutionsTypewriter.getBoundingClientRect();
+  const mobileTitleStart = innerHeight * .92;
+  const mobileTitleEnd = innerHeight * .52;
+  const mobileTitleProgress = Math.min(1, Math.max(0,
+    (mobileTitleStart - mobileTitleRect.top) / Math.max(1, mobileTitleStart - mobileTitleEnd),
+  ));
   solutionsTitleChars.forEach(character => {
+    if (!character.classList.contains('solutions__type-char--space')) return;
     character.style.opacity = '1';
     character.style.transform = 'none';
+  });
+  solutionsTitleLetters.forEach((character, index) => {
+    const staggerOffset = solutionsTitleLetters.length > 1
+      ? (index / (solutionsTitleLetters.length - 1)) * .55
+      : 0;
+    const characterProgress = reduceMotion.matches ? mobileTitleProgress : Math.min(1, Math.max(0,
+      (mobileTitleProgress - staggerOffset) / .45,
+    ));
+    const opacityProgress = 1 - (1 - characterProgress) ** 3;
+    character.style.opacity = opacityProgress.toFixed(4);
+    character.style.transform = `translate3d(0, ${((1 - backOut(characterProgress)) * 34).toFixed(2)}px, 0)`;
   });
   productsSection.classList.add('products--entered');
   embodiedLoopSection.classList.add('embodied-loop--entered');
