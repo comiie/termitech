@@ -127,7 +127,8 @@ document.querySelector('#app').innerHTML = `
             <img class="brand__image brand__image--hero" src="${A}header-logo.png" alt="TermiTech">
             <span class="brand__image brand__image--solid" aria-hidden="true"><img src="${A}brand-symbol.png" alt=""><img src="${A}brand-word.svg" alt=""></span>
           </a>
-          <nav class="hero-nav" aria-label="主导航"><a href="#about" data-i18n="about">关于我们</a><a href="#products" data-i18n="products">产品中心</a><a href="#solutions" data-i18n="solutions">解决方案</a><a href="#partners" data-i18n="cases">案例中心</a><a href="#news" data-i18n="news">新闻动态</a><a href="#footer" data-i18n="join">加入我们</a></nav>
+          <button class="mobile-menu-toggle" type="button" aria-label="打开导航" aria-expanded="false"><i></i><i></i></button>
+          <nav class="hero-nav" aria-label="主导航"><a href="#about" data-i18n="about">关于我们</a><a href="#products" data-i18n="products">产品中心</a><a href="#solutions" data-i18n="solutions">解决方案</a><a href="#partners" data-i18n="cases">案例中心</a><a href="#news" data-i18n="news">新闻动态</a><a href="#footer" data-i18n="join">加入我们</a><a class="hero-nav__mobile-contact" href="#explore" data-i18n="contact">联系我们</a></nav>
           <div class="language-picker">
             <button class="language-picker__trigger" type="button" aria-haspopup="listbox" aria-expanded="false"><span>中</span><i aria-hidden="true"></i></button>
             <div class="language-picker__menu" role="listbox" aria-label="语言选择">
@@ -314,6 +315,7 @@ const PRODUCT_LOOP_OVERLAP = 160;
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const hero = document.querySelector('.hero');
 const header = document.querySelector('.header');
+const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
 const productsSection = document.querySelector('.products');
 const productsStage = document.querySelector('.products__stage');
 const productsTrack = document.querySelector('.products__track');
@@ -389,6 +391,7 @@ let activeVideoCard = null;
 let scale = innerWidth / DESIGN_WIDTH;
 let layoutWidth = DESIGN_WIDTH;
 let compactLayout = false;
+let mobileFlow = innerWidth <= 1024;
 let heroHeight = SCREEN_HEIGHT;
 let productPinDistance = SCREEN_HEIGHT * 1.94;
 let productReleaseDistance = SCREEN_HEIGHT * .08;
@@ -543,15 +546,32 @@ heroPlayer.addEventListener('click', event => {
 });
 document.addEventListener('click', event => {
   if (!languagePicker.contains(event.target)) setLanguageMenu(false);
+  if (!header.contains(event.target)) {
+    header.classList.remove('header--menu-open');
+    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+    mobileMenuToggle.setAttribute('aria-label', '打开导航');
+  }
+});
+mobileMenuToggle.addEventListener('click', () => {
+  const opened = header.classList.toggle('header--menu-open');
+  mobileMenuToggle.setAttribute('aria-expanded', String(opened));
+  mobileMenuToggle.setAttribute('aria-label', opened ? '关闭导航' : '打开导航');
+  if (opened) {
+    headerHidden = false;
+    header.classList.remove('header--hidden');
+  }
 });
 document.addEventListener('keydown', event => {
   if (event.key !== 'Escape') return;
   setLanguageMenu(false);
+  header.classList.remove('header--menu-open');
+  mobileMenuToggle.setAttribute('aria-expanded', 'false');
+  mobileMenuToggle.setAttribute('aria-label', '打开导航');
   closeHeroVideo();
 });
 
 addEventListener('wheel', event => {
-  if (reduceMotion.matches || event.ctrlKey || Math.abs(event.deltaY) < .01) return;
+  if (mobileFlow || reduceMotion.matches || event.ctrlKey || Math.abs(event.deltaY) < .01) return;
   event.preventDefault();
   const unit = event.deltaMode === WheelEvent.DOM_DELTA_LINE
     ? 18
@@ -582,6 +602,7 @@ setTimeout(() => {
 }, reduceMotion.matches ? 0 : 420);
 
 function updateMetrics() {
+  mobileFlow = innerWidth <= 1024;
   compactLayout = innerWidth <= 1024;
   layoutWidth = compactLayout ? innerWidth : DESIGN_WIDTH;
   scale = compactLayout ? 1 : Math.min(1, innerWidth / DESIGN_WIDTH);
@@ -601,6 +622,20 @@ function updateMetrics() {
   const compactScreenCap = innerWidth <= 900
     ? Math.max(720, layoutWidth * 1.35)
     : Math.max(760, layoutWidth * 1.15);
+  if (mobileFlow) {
+    heroHeight = Math.min(820, Math.max(680, innerHeight));
+    productPinDistance = 0;
+    productReleaseDistance = 0;
+    solutionsPinDistance = 0;
+    canvas.style.setProperty('--hero-height', `${heroHeight}px`);
+    canvas.style.setProperty('--screen-height', `${heroHeight}px`);
+    canvas.style.setProperty('--screen-ratio', '1');
+    productsSection.style.setProperty('--products-height', 'auto');
+    solutionsSection.style.setProperty('--solutions-height', 'auto');
+    canvas.style.height = 'auto';
+    document.body.style.height = 'auto';
+    return;
+  }
   heroHeight = compactLayout
     ? Math.min(naturalScreenHeight, compactScreenCap)
     : Math.min(SCREEN_HEIGHT, naturalScreenHeight);
@@ -646,6 +681,55 @@ function renderLoopWaves(timestamp) {
   });
 }
 
+function mobileSectionVisible(section, threshold = .86) {
+  const rect = section.getBoundingClientRect();
+  return rect.top < innerHeight * threshold && rect.bottom > innerHeight * .08;
+}
+
+function renderMobile(timestamp) {
+  current = scrollY;
+  target = scrollY;
+  scrollTarget = scrollY;
+  appliedScrollY = scrollY;
+  productsStage.style.transform = 'none';
+  productsTrack.style.transform = 'none';
+  productCardElements.forEach(card => {
+    card.style.transform = 'none';
+    card.style.clipPath = 'none';
+  });
+  solutionsStage.style.transform = 'none';
+  solutionsTitleChars.forEach(character => {
+    character.style.opacity = '1';
+    character.style.transform = 'none';
+  });
+  productsSection.classList.add('products--entered');
+  embodiedLoopSection.classList.add('embodied-loop--entered');
+  renderLoopWaves(timestamp);
+  const nextAboutInView = mobileSectionVisible(aboutSection);
+  if (nextAboutInView !== aboutInView) {
+    aboutInView = nextAboutInView;
+    aboutSection.classList.toggle('about--entered', aboutInView);
+    if (!aboutInView) {
+      aboutColorWavePlayedInView = false;
+      aboutSection.classList.remove('about--color-wave');
+    }
+  }
+  if (aboutInView && !aboutColorWavePlayedInView && aboutSection.getBoundingClientRect().top < innerHeight * .48) {
+    aboutColorWavePlayedInView = true;
+    aboutSection.classList.add('about--color-wave');
+  }
+  partnersInView = true;
+  newsInView = true;
+  partnersSection.classList.add('partners-news--entered', 'partners-news--news-entered');
+  exploreInView = true;
+  exploreSection.classList.add('explore--entered');
+  footerInView = true;
+  footerSection.classList.add('footer--entered');
+  viewport.style.background = scrollY < heroHeight ? '#000' : '#fff';
+  canvas.style.transform = 'none';
+  header.style.transform = 'none';
+}
+
 function render(timestamp = performance.now()) {
   if (!running) return;
   const deltaTime = Math.min(48, Math.max(1, timestamp - lastFrameTimestamp));
@@ -655,6 +739,11 @@ function render(timestamp = performance.now()) {
   footerGlowPointer.currentY += (footerGlowPointer.targetY - footerGlowPointer.currentY) * footerGlowBlend;
   footerMark.style.setProperty('--footer-glow-x', `${footerGlowPointer.currentX.toFixed(2)}px`);
   footerMark.style.setProperty('--footer-glow-y', `${footerGlowPointer.currentY.toFixed(2)}px`);
+  if (mobileFlow) {
+    renderMobile(timestamp);
+    frame = requestAnimationFrame(render);
+    return;
+  }
   target = scrollTarget;
   if (reduceMotion.matches) current = target;
   else {
@@ -855,6 +944,11 @@ function render(timestamp = performance.now()) {
 function scrollToHash(hash) {
   const element = document.querySelector(hash);
   if (!element) return;
+  if (mobileFlow) {
+    const destination = Math.max(0, element.getBoundingClientRect().top + scrollY - 68);
+    scrollTo({ top: destination, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    return;
+  }
   let designTop = 0;
   for (let node = element; node && node !== canvas; node = node.offsetParent) designTop += node.offsetTop;
   const destination = designTop * scale;
@@ -870,6 +964,9 @@ document.addEventListener('click', event => {
   if (!link) return;
   const hash = link.getAttribute('href');
   event.preventDefault();
+  header.classList.remove('header--menu-open');
+  mobileMenuToggle.setAttribute('aria-expanded', 'false');
+  mobileMenuToggle.setAttribute('aria-label', '打开导航');
   history.replaceState(null, '', hash);
   scrollToHash(hash);
 });
