@@ -834,11 +834,11 @@
   .section-title p{white-space:nowrap}
   .embodied-loop>.section-title{width:240px}
   .embodied-loop__waves{top:auto;bottom:118px}
-  .loop-orb--left,.loop-orb--right{top:auto;bottom:139px}
-  .loop-orb--center{top:auto;bottom:119px}
-  .loop-orb__ring{top:auto;bottom:100px}
-  .loop-orb-hover-ring{top:auto;bottom:100px}
-  .loop-step__line{height:calc(74.259259% - 359px)}
+  .loop-orb--left,.loop-orb--right{top:auto;bottom:92px}
+  .loop-orb--center{top:auto;bottom:72px}
+  .loop-orb__ring{top:auto;bottom:53px}
+  .loop-orb-hover-ring{top:auto;bottom:53px}
+  .loop-step__line{height:calc(74.259259% - 312px)}
   .loop-hover-detail__line{height:var(--loop-side-line-length,322px)}
 }
 

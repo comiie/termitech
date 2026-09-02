@@ -775,8 +775,8 @@ function updateMetrics() {
   productPinDistance = heroHeight * (intermediateDesktop ? .46 : .62);
   productReleaseDistance = heroHeight * (intermediateDesktop ? .06 : .04);
   solutionsPinDistance = heroHeight * (compactLayout ? 2.05 : 1.8);
-  embodiedLoopSection.style.setProperty('--loop-step-line-length', `${Math.max(0, heroHeight * .74259259 - 359)}px`);
-  embodiedLoopSection.style.setProperty('--loop-side-line-length', `${Math.max(0, heroHeight * .63055556 - 359)}px`);
+  embodiedLoopSection.style.setProperty('--loop-step-line-length', `${Math.max(0, heroHeight * .74259259 - 312)}px`);
+  embodiedLoopSection.style.setProperty('--loop-side-line-length', `${Math.max(0, heroHeight * .63055556 - 312)}px`);
   canvas.style.setProperty('--hero-height', `${heroHeight}px`);
   canvas.style.setProperty('--screen-height', `${heroHeight}px`);
   canvas.style.setProperty('--screen-ratio', `${compactLayout ? 1 : Math.min(1, heroHeight / SCREEN_HEIGHT)}`);
