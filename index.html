@@ -7,10 +7,18 @@
     <meta name="description" content="晨昏线专注于精密柔性操作与具身智能技术研发，让智能系统从感知走向执行。" />
     <link rel="icon" type="image/webp" sizes="100x100" href="/termitech-ico.webp" />
     <link rel="apple-touch-icon" href="/termitech-ico.webp" />
+    <link rel="stylesheet" href="/src/styles.css" />
     <title>晨昏线 TermiTech</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="viewport"><main class="canvas" id="canvas">
+        <section class="hero" id="home" data-figma-node="176:3">
+          <!-- Parser-discovered media starts loading before the page module. -->
+          <video class="hero__video" src="/assets/hero-video.webm?v=stream-1" poster="/assets/hero-earth.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+        </section>
+      </main></div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

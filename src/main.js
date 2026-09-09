@@ -1,11 +1,16 @@
-import './styles.css';
-
 const initialHash = location.hash;
 if (initialHash) history.replaceState(null, '', `${location.pathname}${location.search}`);
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
 const A = '/assets/';
+const heroVideo = document.querySelector('.hero__video');
+const heroVideoSrc = heroVideo.getAttribute('src');
+// Start as soon as playable data arrives; do not wait for the page load event.
+heroVideo.muted = true;
+heroVideo.play().catch(() => {
+  // Native muted autoplay remains the fallback for browser playback policies.
+});
 
 const action = (label, href, tone = 'light') => `
   <a class="action action--${tone}" href="${href}">
@@ -129,12 +134,8 @@ const solutionCards = [0, 1].map(group => {
   </div>`;
 }).join('');
 
-document.querySelector('#app').innerHTML = `
-  <div class="viewport"><main class="canvas" id="canvas">
-    <section class="hero" id="home" data-figma-node="176:3">
-      <video class="hero__video" poster="${A}hero-earth.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-        <source src="${A}hero-video.webm" type="video/webm">
-      </video>
+// Preserve the parser-created video node and its in-flight request/playback.
+document.querySelector('#home').insertAdjacentHTML('beforeend', `
       <span class="hero__veil" aria-hidden="true"></span>
       <img class="hero__glow" src="${A}imgRectangle1430107004.webp" alt="">
       <header class="header header--top">
@@ -159,15 +160,15 @@ document.querySelector('#app').innerHTML = `
       <p class="hero__intro" data-i18n="heroIntro">晨昏线专注于精密柔性操作与具身智能技术研发，让智能系统从感知走向执行，<br>实现复杂环境下更加自然、高效的智能交互。</p>
       <div class="hero__action">${action('探索解决方法', '#solutions', 'dark')}</div>
       <div class="hero-cards" tabindex="0" aria-label="机器人自主作业视频卡片，悬停或聚焦展开">
-        <article class="hero-card hero-card--back" tabindex="0" aria-label="播放灵巧操作视频" data-video="${A}hero-video.webm">
+        <article class="hero-card hero-card--back" tabindex="0" aria-label="播放灵巧操作视频" data-video="${heroVideoSrc}">
           <div class="hero-card__media"><img src="${A}imgHumanWithNeuralHandProsthesisPlayingPiano1.webp" alt="灵巧机械手精细操作"><span class="hero-card__play" aria-hidden="true"></span></div>
           <p data-i18n="cardBack">灵巧操作与多模态协同：<br>机器人精细作业演示</p><time>03:28</time>
         </article>
-        <article class="hero-card hero-card--middle" tabindex="0" aria-label="播放柔性分拣视频" data-video="${A}hero-video.webm">
+        <article class="hero-card hero-card--middle" tabindex="0" aria-label="播放柔性分拣视频" data-video="${heroVideoSrc}">
           <div class="hero-card__media"><img src="${A}imgRobotArmPicksUpBoxAutonomousRobot1.webp" alt="机器人柔性分拣"><span class="hero-card__play" aria-hidden="true"></span></div>
           <p data-i18n="cardMiddle">精密分拣与柔性抓取：<br>具身智能产线实测</p><time>05:46</time>
         </article>
-        <article class="hero-card hero-card--front" tabindex="0" aria-label="播放机器人自主作业视频" data-video="${A}hero-video.webm">
+        <article class="hero-card hero-card--front" tabindex="0" aria-label="播放机器人自主作业视频" data-video="${heroVideoSrc}">
           <div class="hero-card__media"><img src="${A}imgKvDesktop1.webp" alt="机器人自主作业实录"><span class="hero-card__play" aria-hidden="true"></span></div>
           <p data-i18n="cardFront">从感知、决策到执行：<br>机器人自主作业实录</p><time>08:12</time>
         </article>
@@ -176,8 +177,12 @@ document.querySelector('#app').innerHTML = `
         <button class="hero-player__close" type="button" aria-label="关闭视频">×</button>
         <div class="hero-player__frame"><video controls playsinline preload="metadata"></video></div>
       </div>
-    </section>
+`);
 
+// Mark off-screen images before insertion so they do not compete with the
+// banner's first media packets. Their existing containers reserve the layout.
+const sectionsTemplate = document.createElement('template');
+sectionsTemplate.innerHTML = `
     <section class="products" id="products" data-figma-node="154:14">
       <div class="products__stage">
         ${sectionTitle('Product Series', '产品系列')}
@@ -303,7 +308,13 @@ document.querySelector('#app').innerHTML = `
         <span class="footer-mark__scan footer-mark__scan--line" aria-hidden="true"></span>
       </div>
     </footer>
-  </main></div>`;
+`;
+sectionsTemplate.content.querySelectorAll('img').forEach(image => {
+  image.loading = 'lazy';
+  image.decoding = 'async';
+  image.fetchPriority = 'low';
+});
+document.querySelector('#canvas').append(sectionsTemplate.content);
 
 // Only the four news destinations are live during this preview phase. Keep
 // future destinations as data, not hrefs, so new-tab and mail actions stay off too.
