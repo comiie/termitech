@@ -88,10 +88,10 @@ const partnerCells = partnerLogos.map((logo, index) => {
 }).join('');
 
 const news = [
-  { x: 80, title: '再下一城，晨昏线获得中国机器人行业年会“灵巧手最佳适配奖”', image: 'img3DRenderingIndustry40Concept1.webp', imageClass: 'news-image--one' },
-  { x: 526, title: '晨昏线斩获深圳智能机器人灵巧手大赛人气团队奖', image: 'img4435169A1.webp', imageClass: 'news-image--two' },
-  { x: 972, title: '说啥弹啥，晨昏线钢琴大师TermiPianist带你走进美妙的钢琴世界', image: 'imgHumanWithNeuralHandProsthesisPlayingPiano1.webp', imageClass: 'news-image--three' },
-  { x: 1418, title: '具身智能加速进入真实世界，机器人如何从“理解”走向“行动”', image: 'img7209Fbea1.webp', imageClass: 'news-image--four' },
+  { x: 80, title: '晨昏线首次登陆IFA', image: 'news-ifa.webp', imageClass: 'news-image--ifa' },
+  { x: 526, title: '研究进展｜LookStep：迈向更高效的视觉推理', image: 'news-lookstep.webp', imageClass: 'news-image--lookstep' },
+  { x: 972, title: '晨昏线科技目标因果世界模型GCWM 位列 WorldArena 2.0 Track 2全球第二', image: 'news-worldarena.webp', imageClass: 'news-image--worldarena' },
+  { x: 1418, title: '晨昏线科技在世界机器人大会收获央视连赞', image: 'news-cctv.webp', imageClass: 'news-image--cctv' },
 ];
 
 const newsCards = news.map((item, index) => `<article class="news-card" style="left:${item.x}px;--news-delay:${.14 + index * .06}s">
@@ -102,7 +102,7 @@ const newsCards = news.map((item, index) => `<article class="news-card" style="l
 const products = [
   { name: 'TermiDataCube', title: '具身数据采集系统', description: '面向机器人训练，构建高质量具身数据基础。', image: 'img11.webp', mobileImage: 'img11-single.webp', imageClass: 'product-card__image--datacube' },
   { name: 'TermiBrain', title: '具身大脑系列', description: '融合感知、决策与控制，驱动机器人自主作业。', image: 'img521.webp', imageClass: 'product-card__image--brain' },
-  { name: 'TermiBot', title: '具身硬件系列', description: '面向多场景任务，实现自主导航与精细作业。', image: 'img21.webp', imageClass: 'product-card__image--bot' },
+  { name: 'TermiBot', title: '具身硬件系列', description: '面向多场景任务，实现自主导航与精细作业。', image: 'termibot-humanoid.webp', imageClass: 'product-card__image--humanoid' },
   { name: 'TermiMaster', title: '多机集群作业平台', description: '统一管理异构设备，实现多机智能协同。', image: 'termimaster-dashboard.webp', imageClass: 'product-card__image--master' },
 ];
 
@@ -112,6 +112,27 @@ const productCards = products.map((item, index) => `<article class="product-card
   <div class="product-card__copy"><p>${item.name}</p><h3>${item.title}</h3><span>${item.description}</span></div>
   <a class="product-arrow" href="#products" aria-label="了解 ${item.name}"><img class="product-arrow__icon product-arrow__icon--leave" src="${A}imgFrame2.svg" alt=""><img class="product-arrow__icon product-arrow__icon--enter" src="${A}imgFrame2.svg" alt=""></a>
 </article>`).join('');
+
+// Two scenes per category, in the same order as the four Figma artboards.
+const solutionCases = [
+  { category: '3C制造自主作业', title: '家电耐久测试', image: 'solution-endurance.webp', node: '290:550', description: '依托多工位任务编排切换、VLM语义调度演示、多模态感知执行闭环体系,集成任务下发导航工位辨识、规则可控动作调度、视触融合校验重试回撤能力,构建全流程自主机器人作业管控系统。' },
+  { category: '3C制造自主作业', title: '智能分拣', image: 'solution-sorting.webp', node: '290:558', description: '通过模型理解分拣业务要求,VIT全局上下文建模和自主决策闭环,构建从视觉识别、深度学习到自主决策的自动分拣机器人作业系统。' },
+  { category: '精密柔性操作', title: '钢琴弹奏', image: 'solution-piano.webp', node: '290:539', description: '通过TermiBrain大脑实现“说啥弹啥”,具备最优指法生成与曲目知识库增强能力' },
+  { category: '精密柔性操作', title: 'SMT车间上下料', image: 'solution-smt.webp', node: '290:566', description: '柔性部署与协同:基于自研“目标因果世界模型GCWM1”,可快速适配不同产线布局与作业规范,进行长程精细化作业。支持多机协同作业与跨本体适配及管理。' },
+];
+const solutionCards = solutionCases.map((item, index) => {
+  const group = Math.floor(index / 2);
+  const dots = solutionCases.slice(group * 2, group * 2 + 2).map((other, dotIndex) => `
+    <button class="solution-dot" type="button" data-solution-index="${group * 2 + dotIndex}" aria-label="切换至${other.title}" aria-pressed="${dotIndex === index % 2}"><span aria-hidden="true"></span></button>`).join('');
+  return `<article class="solution-scene solution-scene--${group === 0 ? 'left' : 'right'}${index % 2 === 0 ? ' is-mobile-selected' : ''}" data-figma-node="${item.node}" style="--scene-index:${index};--group-row:${group + 1}" aria-label="${item.category}：${item.title}">
+    <div class="solution-scene__media"><img class="solution-scene__image" src="${A}${item.image}" alt="${item.title}"><div class="solution-scene__action">${action('了解更多', '#explore', 'glass')}</div></div>
+    <div class="solution-scene__copy">
+      <h3>${item.category}</h3>
+      <div class="solution-dots" role="group" aria-label="${item.category}案例切换">${dots}</div>
+      <h4>${item.title}</h4><p>${item.description}</p>
+    </div>
+  </article>`;
+}).join('');
 
 document.querySelector('#app').innerHTML = `
   <div class="viewport"><main class="canvas" id="canvas">
@@ -128,7 +149,7 @@ document.querySelector('#app').innerHTML = `
             <span class="brand__image brand__image--solid" aria-hidden="true"><img src="${A}brand-symbol.webp" alt=""><img src="${A}brand-word.svg" alt=""></span>
           </a>
           <button class="mobile-menu-toggle" type="button" aria-label="打开导航" aria-expanded="false"><i></i><i></i></button>
-          <nav class="hero-nav" aria-label="主导航"><a href="#about" data-i18n="about">关于我们</a><a href="#products" data-i18n="products">产品中心</a><a href="#solutions" data-i18n="solutions">解决方案</a><a href="#partners" data-i18n="cases">案例中心</a><a href="#news" data-i18n="news">新闻动态</a><a href="#footer" data-i18n="join">加入我们</a><div class="hero-nav__languages" aria-label="语言切换"><button type="button" data-language="zh">中文</button><button type="button" data-language="en">EN</button></div></nav>
+          <nav class="hero-nav" aria-label="主导航"><a href="#about" data-i18n="about">关于我们</a><a href="#products" data-i18n="products">产品中心</a><a href="#solutions" data-i18n="solutions">解决方案</a><a href="#partners" data-i18n="cases">案例中心</a><a href="#news" data-i18n="news">最新动态</a><a href="#footer" data-i18n="join">加入我们</a><div class="hero-nav__languages" aria-label="语言切换"><button type="button" data-language="zh">中文</button><button type="button" data-language="en">EN</button></div></nav>
           <div class="language-picker">
             <button class="language-picker__trigger" type="button" aria-haspopup="listbox" aria-expanded="false"><span>中</span><i aria-hidden="true"></i></button>
             <div class="language-picker__menu" role="listbox" aria-label="语言选择">
@@ -199,7 +220,7 @@ document.querySelector('#app').innerHTML = `
       <div class="loop-orbs" aria-label="拖动切换具身闭环产品">
       <div class="loop-orbs__track">
       <div class="loop-orb loop-orb--left">
-        <img class="loop-orb__surface" src="${A}loop-circle-200.svg" alt="">
+        <img class="loop-orb__surface" src="${A}loop-circle-data.svg" alt="">
         <div class="loop-orb__crop"><img src="${A}loop-datacube-right.webp" alt="TermiBot 灵巧机器人"></div>
       </div>
       <span class="loop-orb-hover-ring loop-orb-hover-ring--left" aria-hidden="true"></span>
@@ -214,12 +235,12 @@ document.querySelector('#app').innerHTML = `
       </div>
       <div class="loop-orb loop-orb--center">
         <img class="loop-orb__surface" src="${A}loop-circle-240.svg" alt="">
-        <div class="loop-orb__crop"><img src="${A}loop-hand.webp" alt="灵巧手"></div>
+        <div class="loop-orb__crop loop-orb__crop--full"><img src="${A}loop-brain.webp" alt="TermiBrain 具身大脑模型"></div>
       </div>
       <img class="loop-orb__ring" src="${A}loop-center-ring.webp" alt="">
       <div class="loop-orb loop-orb--right">
         <img class="loop-orb__surface" src="${A}loop-circle-200.svg" alt="">
-        <div class="loop-orb__crop"><img src="${A}loop-datacube-left.webp" alt="TermiDataCube 具身数据采集设备"></div>
+        <div class="loop-orb__crop loop-orb__crop--full"><img src="${A}loop-scenarios.webp" alt="TermiMaster 多场景协同验证"></div>
       </div>
       <span class="loop-orb-hover-ring loop-orb-hover-ring--right" aria-hidden="true"></span>
       <div class="loop-hover-detail loop-hover-detail--right" aria-hidden="true">
@@ -235,42 +256,18 @@ document.querySelector('#app').innerHTML = `
       </div>
     </section>
 
-    <section class="solutions" id="solutions" data-figma-node="131:1060">
+    <section class="solutions" id="solutions" aria-label="真实场景应用案例">
       <div class="solutions__stage">
         <h2 class="solutions__typewriter" aria-label="Built for the Real World"><span class="solutions__title-line">${typewriterMarkup('Built for the ', 0, 24)}</span><span class="solutions__title-line solutions__title-line--real">${typewriterMarkup('Real World', 14, 24)}</span></h2>
-        <div class="solutions__stack">
-          <article class="solution-scene solution-scene--one" style="--scene-index:0">
-            <div class="solution-scene__media"><img src="${A}imgRobotArmPicksUpBoxAutonomousRobot1.webp" alt="智能机器人柔性分拣作业"></div>
-            <div class="solution-scene__copy">
-              <h3>智能分拣</h3>
-              <p>通过视觉感知与自主决策闭环，让机器人在复杂产线中完成柔性识别、抓取与分流。</p>
-            </div>
-          </article>
-          <article class="solution-scene solution-scene--two" style="--scene-index:1">
-            <div class="solution-scene__media"><img src="${A}img3DRenderingIndustry40Concept1.webp" alt="机器人灵巧协作作业"></div>
-            <div class="solution-scene__copy">
-              <h3>灵巧协作</h3>
-              <p>融合具身大脑与精细控制能力，让机器人在开放环境中理解任务并完成稳定操作。</p>
-            </div>
-          </article>
-          <article class="solution-scene solution-scene--three" style="--scene-index:2">
-            <div class="solution-scene__media"><img src="${A}imgWecomTemp4550991F142Db8Cb3Ba936Cec68D87Aad49C3A71.webp" alt="多机集群协同作业平台"></div>
-            <div class="solution-scene__veil" aria-hidden="true"></div>
-            <div class="solution-scene__final">
-              <h3>多机协同，释放群体智能</h3>
-              <p>让设备、任务与场景在统一平台中高效联动。</p>
-              ${action('了解更多', '#explore', 'glass')}
-            </div>
-          </article>
-        </div>
+        <div class="solutions__stack">${solutionCards}</div>
       </div>
     </section>
 
     <section class="about" id="about" data-figma-node="176:268">
       <div class="about__background"><img src="${A}imgTheGlobalTravelAndTourismIndustryIsResponsibleForAbout45BillionTonsOfEquivalentCarbonDioxideEmissionsAYear1.webp" alt=""><span></span></div>
       ${sectionTitle('about us', '关于我们', true)}
-      <p class="about__intro">晨昏线科技致力于构建具身机器人大脑，以跨本体、跨品牌的通用适配能力为己任，打破硬件壁垒，让智能真正流动。</p>
-      <div class="about__action">${action('了解更多', '#about', 'glass')}</div>
+      <div class="about__story"><p class="about__intro">晨昏线科技(TermiTech)致力于构建具身机器人大脑，以跨本体、跨品牌的通用适配能力为己任，打破硬件壁垒，让智能真正流动。在行业内首创目标因果世界模型(GCWM1)，基于因果链条洞察物理状态分布，赋予机器人理解复杂现实并自由行动的能力，推动具身智能走向规模化商用。</p>
+      <div class="about__action">${action('了解更多', '#about', 'glass')}</div></div>
       <div class="metrics-grid">
         <div class="metric" style="left:80px;--metric-color:#FF8700;--metric-index:0"><strong>20+</strong><span>硬件厂商</span></div>
         <div class="metric" style="left:526px;--metric-color:#8D81FF;--metric-index:1"><strong>10+</strong><span>场景落地</span></div>
@@ -299,9 +296,9 @@ document.querySelector('#app').innerHTML = `
     </section>
 
     <footer class="footer" id="footer" data-figma-node="176:165">
-      <nav class="footer-nav"><div><a href="#home">首页</a><a href="#about">关于我们</a><a href="#products">产品中心</a><a href="#solutions">解决方案</a></div><div><a href="#news">新闻动态</a><a href="#footer">加入我们</a><a href="#explore">联系我们</a><a href="#partners">案例中心</a></div></nav>
+      <nav class="footer-nav"><div><a href="#home">首页</a><a href="#about">关于我们</a><a href="#products">产品中心</a><a href="#solutions">解决方案</a></div><div><a href="#news">最新动态</a><a href="#footer">加入我们</a><a href="#explore">联系我们</a><a href="#partners">案例中心</a></div></nav>
       <div class="footer-contact"><div><span>邮箱</span><a href="mailto:contact@termitech.cn">contact@termitech.cn</a></div><div><span>地址</span><p>广东省深圳市坪山区龙田街道竹坑社区聚和路8号多彩硅谷</p></div></div>
-      <div class="footer-legal"><a href="#footer">服务条款</a><a href="#footer">隐私政策</a><p>© 2026,TermiTech. All Rights Reserved.</p><img class="footer-social-row" src="${A}imgGroup2085661577.svg" alt="社交媒体"><img class="footer-social-x" src="${A}social-x.svg" alt="X"></div>
+      <div class="footer-legal"><a href="#footer">服务条款</a><a href="#footer">隐私政策</a><p>© 2026,TermiTech. All Rights Reserved.</p><div class="footer-socials" aria-label="社交媒体"><img class="footer-socials__x" src="${A}social-x.svg" alt="X"><img src="${A}social-channels.svg" alt="视频号"><img src="${A}social-wechat.svg" alt="微信公众号"></div></div>
       <div class="footer-mark">
         <img class="footer-mark__symbol" src="${A}imgGroup2090054754.svg" alt="">
         <img class="footer-mark__word" src="${A}imgGroup1.svg" alt="TermiTech">
@@ -338,6 +335,45 @@ const solutionsTitleLetters = solutionsTitleChars.filter(character => (
 const solutionScenes = [...document.querySelectorAll('.solution-scene')];
 const solutionSceneProgress = solutionScenes.map(() => 0);
 let solutionTitleProgress = 0;
+let activeSolutionIndex = -1;
+const mobileSolutionSelections = [0, 2];
+function syncSolutionControls(activeIndex = activeSolutionIndex) {
+  activeSolutionIndex = Math.max(0, activeIndex);
+  solutionScenes.forEach((scene, index) => {
+    const selected = mobileFlow
+      ? mobileSolutionSelections[Math.floor(index / 2)] === index
+      : activeSolutionIndex === index;
+    scene.classList.toggle('is-active', selected);
+    scene.classList.toggle('is-mobile-selected', mobileSolutionSelections[Math.floor(index / 2)] === index);
+    scene.inert = !selected;
+    scene.setAttribute('aria-hidden', String(!selected));
+  });
+}
+solutionsSection.addEventListener('click', event => {
+  const dot = event.target.closest('[data-solution-index]');
+  if (!dot) return;
+  const index = Number(dot.dataset.solutionIndex);
+  if (mobileFlow) {
+    mobileSolutionSelections[Math.floor(index / 2)] = index;
+    syncSolutionControls();
+  } else {
+    // Land on a fully revealed scene, inside its hold interval. Keep the
+    // existing scroll damping so dot navigation uses the same stack motion.
+    scrollTarget = (solutionsSection.offsetTop
+      + (index === 0 ? .15 : index + .65) * solutionsPinDistance / solutionScenes.length) * scale;
+    if (reduceMotion.matches) current = scrollTarget;
+  }
+  if (event.detail === 0) {
+    // Keyboard focus follows the replacement control after the transition.
+    pendingSolutionFocus = index;
+    if (mobileFlow) focusSolutionDot(index);
+  }
+});
+let pendingSolutionFocus = null;
+function focusSolutionDot(index) {
+  solutionScenes[index].querySelector(`[data-solution-index="${index}"]`).focus({ preventScroll: true });
+  pendingSolutionFocus = null;
+}
 const aboutSection = document.querySelector('.about');
 const aboutMetrics = [...document.querySelectorAll('.metric')];
 let aboutCharSequence = 0;
@@ -559,7 +595,7 @@ footerMark.addEventListener('pointerleave', () => footerMark.classList.remove('f
 
 const translations = {
   zh: {
-    about: '关于我们', products: '产品中心', solutions: '解决方案', cases: '案例中心', news: '新闻动态', join: '加入我们', contact: '联系我们',
+    about: '关于我们', products: '产品中心', solutions: '解决方案', cases: '案例中心', news: '最新动态', join: '加入我们', contact: '联系我们',
     heroTitle: '在晨昏交织处，智能觉醒',
     heroIntro: '晨昏线专注于精密柔性操作与具身智能技术研发，让智能系统从感知走向执行，<br>实现复杂环境下更加自然、高效的智能交互。',
     heroAction: '探索解决方法',
@@ -568,7 +604,7 @@ const translations = {
     cardBack: '灵巧操作与多模态协同：<br>机器人精细作业演示',
   },
   en: {
-    about: 'About Us', products: 'Products', solutions: 'Solutions', cases: 'Cases', news: 'News', join: 'Join Us', contact: 'Contact Us',
+    about: 'About Us', products: 'Products', solutions: 'Solutions', cases: 'Cases', news: 'Latest Updates', join: 'Join Us', contact: 'Contact Us',
     heroTitle: 'Where Dawn Meets Dusk, Intelligence Awakens',
     heroIntro: 'TermiTech develops precision, flexible manipulation and embodied intelligence,<br>helping intelligent systems move naturally and efficiently from perception to action.',
     heroAction: 'Explore Solutions',
@@ -735,6 +771,7 @@ setTimeout(() => {
 function updateMetrics() {
   mobileFlow = innerWidth <= 1024;
   compactLayout = innerWidth <= 1024;
+  syncSolutionControls();
   intermediateDesktop = innerWidth > 1024 && innerWidth <= 1400;
   layoutWidth = compactLayout ? innerWidth : DESIGN_WIDTH;
   scale = compactLayout ? 1 : innerWidth / DESIGN_WIDTH;
@@ -774,7 +811,7 @@ function updateMetrics() {
   heroHeight = naturalScreenHeight;
   productPinDistance = heroHeight * (intermediateDesktop ? .46 : .62);
   productReleaseDistance = heroHeight * (intermediateDesktop ? .06 : .04);
-  solutionsPinDistance = heroHeight * (compactLayout ? 2.05 : 1.8);
+  solutionsPinDistance = heroHeight * 2.4;
   embodiedLoopSection.style.setProperty('--loop-step-line-length', `${Math.max(0, heroHeight * .74259259 - 312)}px`);
   embodiedLoopSection.style.setProperty('--loop-side-line-length', `${Math.max(0, heroHeight * .63055556 - 312)}px`);
   canvas.style.setProperty('--hero-height', `${heroHeight}px`);
@@ -997,12 +1034,11 @@ function render(timestamp = performance.now()) {
   });
   const firstSceneStart = -heroHeight * .03;
   const sceneDuration = solutionsInterval * .46;
-  const solutionsScrollProgress = solutionsLocal / Math.max(1, solutionsPinDistance);
-  const sceneTargets = [
-    Math.min(1, Math.max(0, (solutionsLocal - firstSceneStart) / sceneDuration)),
-    Math.min(1, Math.max(0, (solutionsScrollProgress - .08) / .4)),
-    Math.min(1, Math.max(0, (solutionsScrollProgress - .43) / .4)),
-  ];
+  const sceneTargets = solutionScenes.map((_, index) => Math.min(1, Math.max(0,
+    index === 0
+      ? (solutionsLocal - firstSceneStart) / sceneDuration
+      : (solutionsLocal - (index - .1) * solutionsInterval) / (solutionsInterval * .72),
+  )));
   const titleDrivenFirstScene = Math.min(1, Math.max(0,
     (titleRevealProgress - .3) / .4,
   ));
@@ -1022,6 +1058,9 @@ function render(timestamp = performance.now()) {
     solutionSceneProgress[index] += (sceneTarget - solutionSceneProgress[index]) * sceneBlend;
     if (Math.abs(sceneTarget - solutionSceneProgress[index]) < .0001) solutionSceneProgress[index] = sceneTarget;
   });
+  const revealedIndex = Math.max(0, solutionSceneProgress.findLastIndex(progress => progress >= .6));
+  if (revealedIndex !== activeSolutionIndex) syncSolutionControls(revealedIndex);
+  if (pendingSolutionFocus === revealedIndex) focusSolutionDot(revealedIndex);
   solutionScenes.forEach((scene, index) => {
     const visualProgress = solutionSceneProgress[index];
     const easedProgress = index === 0
@@ -1033,9 +1072,10 @@ function render(timestamp = performance.now()) {
     const nextProgress = index === solutionScenes.length - 1
       ? 0
       : solutionSceneProgress[index + 1];
-    const copyOpacity = index === solutionScenes.length - 1
-      ? visualProgress
-      : visualProgress * (1 - nextProgress);
+    // Copy remains anchored on its category's side instead of travelling
+    // with the image stack. Fade out before the next text fades in.
+    const copyOpacity = Math.min(1, Math.max(0, (visualProgress - .6) / .4))
+      * Math.min(1, Math.max(0, 1 - nextProgress / .4));
     const sceneOpacity = visualProgress > .0001 ? 1 : 0;
     const entryY = (1 - easedProgress) * (heroHeight * .76 + index * 34);
     const stackY = stackDepth * -18;
