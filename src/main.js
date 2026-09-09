@@ -112,18 +112,27 @@ const solutionCases = [
   { category: '精密柔性操作', title: '钢琴弹奏', image: 'solution-piano.webp', node: '290:539', description: '通过TermiBrain大脑实现“说啥弹啥”,具备最优指法生成与曲目知识库增强能力' },
   { category: '精密柔性操作', title: 'SMT车间上下料', image: 'solution-smt.webp', node: '290:566', description: '柔性部署与协同:基于自研“目标因果世界模型GCWM1”,可快速适配不同产线布局与作业规范,进行长程精细化作业。支持多机协同作业与跨本体适配及管理。' },
 ];
-const solutionCards = solutionCases.map((item, index) => {
-  const group = Math.floor(index / 2);
-  const dots = solutionCases.slice(group * 2, group * 2 + 2).map((other, dotIndex) => `
-    <button class="solution-dot" type="button" data-solution-index="${group * 2 + dotIndex}" aria-label="切换至${other.title}" aria-pressed="${dotIndex === index % 2}"><span aria-hidden="true"></span></button>`).join('');
-  return `<article class="solution-scene solution-scene--${group === 0 ? 'left' : 'right'}${index % 2 === 0 ? ' is-mobile-selected' : ''}" data-figma-node="${item.node}" style="--scene-index:${index};--group-row:${group + 1}" aria-label="${item.category}：${item.title}">
+const solutionCards = [0, 1].map(group => {
+  const cases = solutionCases.slice(group * 2, group * 2 + 2);
+  const side = group === 0 ? 'left' : 'right';
+  const dots = cases.map((item, index) => `
+    <button class="solution-dot" type="button" data-solution-index="${group * 2 + index}" aria-label="切换至${item.title}" aria-pressed="${index === 0}"><span aria-hidden="true"></span></button>`).join('');
+  const cards = cases.map((item, localIndex) => {
+    const index = group * 2 + localIndex;
+    return `<article class="solution-scene solution-scene--${side}${localIndex === 0 ? ' is-mobile-selected' : ''}" data-figma-node="${item.node}" style="--scene-index:${index};--scene-image:url('${A}${item.image}')" aria-label="${item.category}：${item.title}">
     <div class="solution-scene__media"><img class="solution-scene__image" src="${A}${item.image}" alt="${item.title}"><div class="solution-scene__action">${action('了解更多', '#explore', 'glass')}</div></div>
     <div class="solution-scene__copy">
-      <h3>${item.category}</h3>
-      <div class="solution-dots" role="group" aria-label="${item.category}案例切换">${dots}</div>
       <h4>${item.title}</h4><p>${item.description}</p>
     </div>
   </article>`;
+  }).join('');
+  return `<div class="solution-group solution-group--${side}">
+    <div class="solution-group__heading">
+      <h3>${cases[0].category}</h3>
+      <div class="solution-dots" role="group" aria-label="${cases[0].category}案例切换">${dots}</div>
+    </div>
+    ${cards}
+  </div>`;
 }).join('');
 
 document.querySelector('#app').innerHTML = `
@@ -325,6 +334,8 @@ const solutionsTitleLetters = solutionsTitleChars.filter(character => (
   !character.classList.contains('solutions__type-char--space')
 ));
 const solutionScenes = [...document.querySelectorAll('.solution-scene')];
+const solutionGroups = [...document.querySelectorAll('.solution-group')];
+const solutionDots = [...document.querySelectorAll('.solution-dot')];
 const solutionSceneProgress = solutionScenes.map(() => 0);
 let solutionTitleProgress = 0;
 let activeSolutionIndex = -1;
@@ -339,6 +350,17 @@ function syncSolutionControls(activeIndex = activeSolutionIndex) {
     scene.classList.toggle('is-mobile-selected', mobileSolutionSelections[Math.floor(index / 2)] === index);
     scene.inert = !selected;
     scene.setAttribute('aria-hidden', String(!selected));
+  });
+  solutionGroups.forEach((group, index) => {
+    const active = mobileFlow || Math.floor(activeSolutionIndex / 2) === index;
+    group.classList.toggle('is-active', active);
+    group.querySelector('.solution-group__heading').inert = !active;
+    group.querySelector('.solution-group__heading').setAttribute('aria-hidden', String(!active));
+  });
+  solutionDots.forEach(dot => {
+    const index = Number(dot.dataset.solutionIndex);
+    const selected = mobileFlow ? mobileSolutionSelections[Math.floor(index / 2)] === index : activeSolutionIndex === index;
+    dot.setAttribute('aria-pressed', String(selected));
   });
 }
 solutionsSection.addEventListener('click', event => {
@@ -355,17 +377,8 @@ solutionsSection.addEventListener('click', event => {
       + (index === 0 ? .15 : index + .65) * solutionsPinDistance / solutionScenes.length) * scale;
     if (reduceMotion.matches) current = scrollTarget;
   }
-  if (event.detail === 0) {
-    // Keyboard focus follows the replacement control after the transition.
-    pendingSolutionFocus = index;
-    if (mobileFlow) focusSolutionDot(index);
-  }
+  // The shared controls stay mounted, so keyboard focus never needs to move.
 });
-let pendingSolutionFocus = null;
-function focusSolutionDot(index) {
-  solutionScenes[index].querySelector(`[data-solution-index="${index}"]`).focus({ preventScroll: true });
-  pendingSolutionFocus = null;
-}
 const aboutSection = document.querySelector('.about');
 const aboutMetrics = [...document.querySelectorAll('.metric')];
 let aboutCharSequence = 0;
@@ -1042,22 +1055,31 @@ function render(timestamp = performance.now()) {
     firstSceneTitleGate,
   );
   sceneTargets.forEach((sceneTarget, index) => {
-    if (index > 0 || reduceMotion.matches) {
+    if (reduceMotion.matches) {
       solutionSceneProgress[index] = sceneTarget;
       return;
     }
-    const sceneBlend = 1 - Math.exp(-deltaTime / 205);
+    const sceneBlend = 1 - Math.exp(-deltaTime / (index === 0 ? 205 : 125));
     solutionSceneProgress[index] += (sceneTarget - solutionSceneProgress[index]) * sceneBlend;
     if (Math.abs(sceneTarget - solutionSceneProgress[index]) < .0001) solutionSceneProgress[index] = sceneTarget;
   });
   const revealedIndex = Math.max(0, solutionSceneProgress.findLastIndex(progress => progress >= .6));
   if (revealedIndex !== activeSolutionIndex) syncSolutionControls(revealedIndex);
-  if (pendingSolutionFocus === revealedIndex) focusSolutionDot(revealedIndex);
+  solutionGroups.forEach((group, index) => {
+    const entry = solutionSceneProgress[index * 2];
+    const exit = solutionSceneProgress[(index + 1) * 2] ?? 0;
+    // Only entering/leaving a category animates its heading. Switching the
+    // two cases inside it cannot fade, translate, or remount the controls.
+    const opacity = Math.min(1, Math.max(0, (entry - .2) / .6))
+      * Math.min(1, Math.max(0, 1 - exit / .5));
+    group.style.setProperty('--group-opacity', opacity.toFixed(4));
+    group.style.setProperty('--group-y', `${((1 - opacity) * 12).toFixed(2)}px`);
+  });
   solutionScenes.forEach((scene, index) => {
     const visualProgress = solutionSceneProgress[index];
     const easedProgress = index === 0
       ? 1 - ((1 - visualProgress) ** 3)
-      : visualProgress * visualProgress * (3 - 2 * visualProgress);
+      : visualProgress ** 3 * (visualProgress * (visualProgress * 6 - 15) + 10);
     const stackDepth = Math.min(2, solutionSceneProgress
       .slice(index + 1)
       .reduce((depth, laterProgress) => depth + laterProgress, 0));
@@ -1066,8 +1088,8 @@ function render(timestamp = performance.now()) {
       : solutionSceneProgress[index + 1];
     // Copy remains anchored on its category's side instead of travelling
     // with the image stack. Fade out before the next text fades in.
-    const copyOpacity = Math.min(1, Math.max(0, (visualProgress - .6) / .4))
-      * Math.min(1, Math.max(0, 1 - nextProgress / .4));
+    const copyOpacity = Math.min(1, Math.max(0, (visualProgress - .45) / .4))
+      * Math.min(1, Math.max(0, 1 - nextProgress / .45));
     const sceneOpacity = visualProgress > .0001 ? 1 : 0;
     const entryY = (1 - easedProgress) * (heroHeight * .76 + index * 34);
     const stackY = stackDepth * -18;
@@ -1080,7 +1102,7 @@ function render(timestamp = performance.now()) {
     scene.style.setProperty('--scene-scale', stackScale.toFixed(4));
     scene.style.setProperty('--scene-shadow-opacity', (.18 - Math.min(1, stackDepth) * .08).toFixed(3));
     scene.style.setProperty('--copy-opacity', copyOpacity.toFixed(4));
-    scene.style.setProperty('--copy-y', `${((1 - copyOpacity) * 24).toFixed(2)}px`);
+    scene.style.setProperty('--copy-y', `${((1 - copyOpacity) * 12).toFixed(2)}px`);
   });
   const aboutTop = aboutSection.offsetTop;
   const aboutVisible = designScroll > aboutTop - heroHeight * .68

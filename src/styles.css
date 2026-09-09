@@ -443,6 +443,11 @@
 }
 .solutions__type-char--space{width:.27em}
 .solutions__stack{position:absolute;inset:0;z-index:5;perspective:1800px;transform-style:preserve-3d}
+.solution-group{display:contents;--solution-copy-offset:138px}
+.solution-group__heading{position:absolute;top:38.611111%;width:330px;z-index:12;opacity:var(--group-opacity,0);transform:translate3d(0,var(--group-y,12px),0);pointer-events:none}
+.solution-group.is-active .solution-group__heading{pointer-events:auto}
+.solution-group--left .solution-group__heading{left:80px}
+.solution-group--right .solution-group__heading{left:1510px}
 .solution-scene{
   position:absolute;
   inset:0;
@@ -453,6 +458,8 @@
   pointer-events:none;
 }
 .solution-scene__media{
+  --solution-action-bottom:40px;
+  container-type:size;
   position:absolute;
   left:50%;
   overflow:hidden;
@@ -472,7 +479,7 @@
 .solution-scene.is-active .solution-scene__media,.solution-scene.is-active .solution-scene__copy{pointer-events:auto}
 .solution-scene__copy{
   position:absolute;
-  top:38.611111%;
+  top:calc(38.611111% + var(--solution-copy-offset));
   width:330px;
   opacity:var(--copy-opacity,0);
   transform:translate3d(0,var(--copy-y,24px),0);
@@ -480,7 +487,7 @@
 }
 .solution-scene--left .solution-scene__copy{left:80px}
 .solution-scene--right .solution-scene__copy{left:1510px}
-.solutions .solution-scene__copy h3{
+.solutions .solution-group__heading h3{
   position:static;
   margin:0;
   font-size:40px;
@@ -507,11 +514,30 @@
 .solution-dot span{width:7px;height:7px;border-radius:50%;background:#d8d5df;transition:background .25s ease,transform .25s ease}
 .solution-dot[aria-pressed="true"] span{background:var(--violet);transform:scale(1.18)}
 .solution-dot:focus-visible{outline:2px solid var(--lavender);outline-offset:2px;border-radius:50%}
-.solution-scene__action{position:absolute;left:50%;bottom:40px;z-index:2;width:max-content;opacity:0;visibility:hidden;transform:translate(-50%,12px);transition:opacity .28s ease,transform .4s ease,visibility .28s;pointer-events:none}
-.solution-scene__media:hover .solution-scene__action,.solution-scene__media:focus-within .solution-scene__action{opacity:1;visibility:visible;transform:translate(-50%,0);pointer-events:auto}
-/* Keep the link keyboard-reachable while visually hidden until focus. */
-.solution-scene.is-active .solution-scene__action{visibility:visible}
-.solution-scene__action .action__label{border:0;box-shadow:none;background:rgba(255,255,255,.2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+/* Fade the glass surface itself, never its ancestor: an opacity ancestor
+   becomes a backdrop root and prevents blur from sampling the scene image. */
+.solution-scene__action{position:absolute;left:50%;bottom:var(--solution-action-bottom);z-index:2;width:max-content;transform:translate(-50%,12px);transition:transform .48s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.solution-scene__media:hover .solution-scene__action,.solution-scene__media:focus-within .solution-scene__action{transform:translate(-50%,0);pointer-events:auto}
+.solution-scene__action .action__label,.solution-scene__action .action__badge{opacity:0;transition:opacity .32s ease,transform .5s cubic-bezier(.785,.135,.15,.86);will-change:transform}
+.solution-scene__media:is(:hover,:focus-within) .solution-scene__action :is(.action__label,.action__badge){opacity:1}
+.solution-scene__action .action__label{border:0;box-shadow:none;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+/* A permanently blurred copy of the same image avoids backdrop sampling
+   discontinuities inside the animated 3D stack. Container units align the
+   crop to the media at every size; counter-motion keeps it fixed while the
+   button rises and its label slides sideways. No blur is toggled on hover. */
+.solution-scene__action .action__label::before{
+  content:"";position:absolute;z-index:0;pointer-events:none;
+  width:100cqw;height:100cqh;
+  left:calc(50% + var(--action-shift) / 2 - 50cqw);
+  top:calc(var(--solution-action-bottom) + var(--action-size) - 100cqh - 12px);
+  background:var(--scene-image) center/cover no-repeat;
+  filter:blur(20px);transform:translateX(0) scale(1.015);
+  transition:top .48s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.785,.135,.15,.86);
+}
+.solution-scene__action .action__label::after{content:"";position:absolute;inset:0;z-index:0;background:rgba(255,255,255,.2);pointer-events:none}
+.solution-scene__action .action__label-copy{z-index:1}
+.solution-scene__media:is(:hover,:focus-within) .action__label::before{top:calc(var(--solution-action-bottom) + var(--action-size) - 100cqh)}
+.solution-scene__action .action:is(:hover,:focus-visible,.is-hovered) .action__label::before{transform:translateX(calc(var(--action-shift) * -1)) scale(1.015)}
 
 @media(prefers-reduced-motion:reduce){
   .solutions__caret{display:none}
@@ -875,7 +901,7 @@
   .solutions__stack{perspective:1200px}
   .solution-scene__media,.solution-scene__veil{left:var(--responsive-gutter);top:220px!important;width:calc(100% - var(--responsive-gutter) * 2)!important;height:min(56vh,560px)!important;transform:scale(var(--screen-ratio,1))!important;transform-origin:50% 0}
   .solution-scene__copy{left:var(--responsive-gutter)!important;top:auto;bottom:42px;width:calc(100% - var(--responsive-gutter) * 2);padding:18px 20px;border-radius:16px;background:rgba(255,255,255,.88);backdrop-filter:blur(18px)}
-  .solutions .solution-scene__copy h3{font-size:22px;line-height:28px}
+  .solutions .solution-group__heading h3{font-size:22px;line-height:28px}
   .solutions .solution-scene__copy p{margin-top:8px;font-size:15px;line-height:23px}
   .solution-scene__final{top:auto;bottom:70px;width:calc(100% - var(--responsive-gutter) * 4)}
 
@@ -1080,7 +1106,7 @@
   .solution-scene__media,.solution-scene--one .solution-scene__media,.solution-scene--two .solution-scene__media,.solution-scene--three .solution-scene__media{position:relative;left:auto;top:auto!important;width:100%!important;height:auto!important;aspect-ratio:4/3;border-radius:16px;transform:none!important}
   .solution-scene__image{transform:scale(1.015)}
   .solution-scene__copy,.solution-scene--one .solution-scene__copy,.solution-scene--two .solution-scene__copy{position:relative;left:auto!important;top:auto;bottom:auto;width:100%;margin-top:15px;padding:0;background:none;opacity:1!important;transform:none!important;backdrop-filter:none}
-  .solutions .solution-scene__copy h3{font-size:21px;line-height:27px}
+  .solutions .solution-group__heading h3{font-size:21px;line-height:27px}
   .solutions .solution-scene__copy p{margin-top:8px;font-size:14px;line-height:22px}
   .solution-scene__veil{left:0;top:0!important;width:100%!important;height:auto!important;aspect-ratio:4/3;border-radius:16px;transform:none!important}
   .solution-scene__final{left:50%;top:50%;bottom:auto;width:calc(100% - 40px);opacity:1!important;transform:translate(-50%,-50%)!important}
@@ -1300,20 +1326,26 @@
   .about__story{top:20%;width:690px;gap:24px}
   .about__story .about__intro{font-size:16px;line-height:24px}
   .solution-dots{margin-block:10px 24px}
+  .solution-group{--solution-copy-offset:106px}
 }
 
 @media (max-width:1024px){
   .product-card__media .product-card__image--humanoid{left:50%!important;top:50%!important;width:100%!important;height:100%!important;object-fit:contain!important;transform:translate(-50%,-50%)!important}
-  /* Each category is a two-scene switcher on touch screens. Both scenes
-     reserve the same grid row, so longer descriptions never shift the page. */
+  /* Media and descriptions overlap in separate rows; the shared heading
+     occupies its own stable row and the longest description reserves space. */
   .solutions__stack{row-gap:52px}
-  .solutions__stack .solution-scene{grid-area:var(--group-row)/1;opacity:0!important;visibility:hidden;pointer-events:none;transition:opacity .35s ease,visibility .35s}
-  .solutions__stack .solution-scene.is-mobile-selected{opacity:1!important;visibility:visible;pointer-events:auto}
-  .solutions .solution-scene__copy h3{font-size:clamp(24px,3.4vw,34px);line-height:1.3}
+  .solution-group{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto}
+  .solutions__stack .solution-scene{display:contents}
+  .solution-group__heading{position:relative;grid-area:2/1;left:auto!important;top:auto;width:100%;margin-top:15px;opacity:1;transform:none;pointer-events:auto}
+  .solutions .solution-group__heading h3{font-size:clamp(24px,3.4vw,34px);line-height:1.3}
+  .solutions__stack .solution-scene__media{grid-area:1/1;opacity:0;pointer-events:none;transition:opacity .6s cubic-bezier(.22,1,.36,1)}
+  .solutions__stack .solution-scene__copy{grid-area:3/1;margin-top:0;opacity:0!important;transform:translate3d(0,10px,0)!important;pointer-events:none;transition:opacity .36s ease,transform .6s cubic-bezier(.22,1,.36,1)}
+  .solutions__stack .solution-scene.is-mobile-selected .solution-scene__media{opacity:1;pointer-events:auto}
+  .solutions__stack .solution-scene.is-mobile-selected .solution-scene__copy{opacity:1!important;transform:translate3d(0,0,0)!important;pointer-events:auto}
   .solutions .solution-scene__copy h4{font-size:20px;line-height:28px;font-weight:400}
   .solution-dots{margin:8px 0 14px;gap:2px}
   .solution-dot{width:36px;height:36px}
-  .solution-scene__action{bottom:22px}
+  .solution-scene__media{--solution-action-bottom:22px}
   .about{height:auto!important;min-height:100svh!important;display:flex;flex-direction:column}
   .about__story{position:relative;left:auto;top:auto;width:100%;margin:clamp(48px,8svh,84px) 0 48px;gap:24px}
   .about .metrics-grid{position:relative;left:auto;right:auto;bottom:auto;margin-top:auto}
@@ -1323,8 +1355,10 @@
 }
 
 @media (hover:none){
-  .solution-scene.is-active .solution-scene__action{opacity:1;visibility:visible;transform:translate(-50%,0);pointer-events:auto}
+  .solution-scene.is-active .solution-scene__action{transform:translate(-50%,0);pointer-events:auto}
+  .solution-scene.is-active .solution-scene__action :is(.action__label,.action__badge){opacity:1}
+  .solution-scene.is-active .action__label::before{top:calc(var(--solution-action-bottom) + var(--action-size) - 100cqh)}
 }
 @media (prefers-reduced-motion:reduce){
-  .solutions__stack .solution-scene,.solution-scene__action,.solution-dot span{transition:none!important}
+  .solutions__stack .solution-scene__media,.solutions__stack .solution-scene__copy,.solution-scene__action,.solution-scene__action :is(.action__label,.action__badge),.solution-scene__action .action__label::before,.solution-dot span{transition:none!important}
 }
