@@ -386,6 +386,10 @@ solutionsSection.addEventListener('click', event => {
 });
 const aboutSection = document.querySelector('.about');
 const aboutMetrics = [...document.querySelectorAll('.metric')];
+const aboutFirstNumber = aboutMetrics[0].querySelector('strong');
+// Trigger as the numbers enter the lower viewport, independently of section
+// height or aspect ratio, so the color wave does not wait for the whole screen.
+const ABOUT_COLOR_WAVE_VIEWPORT_EDGE = .94;
 let aboutCharSequence = 0;
 aboutMetrics.forEach(metric => {
   metric.style.setProperty('--metric-reveal-delay', '.2s');
@@ -927,7 +931,8 @@ function renderMobile(timestamp, deltaTime) {
       aboutSection.classList.remove('about--color-wave');
     }
   }
-  if (aboutInView && !aboutColorWavePlayedInView && aboutSection.getBoundingClientRect().top < innerHeight * .48) {
+  if (aboutInView && !aboutColorWavePlayedInView
+    && aboutFirstNumber.getBoundingClientRect().top < innerHeight * ABOUT_COLOR_WAVE_VIEWPORT_EDGE) {
     aboutColorWavePlayedInView = true;
     aboutSection.classList.add('about--color-wave');
   }
@@ -1105,8 +1110,9 @@ function render(timestamp = performance.now()) {
       aboutSection.classList.remove('about--color-wave');
     }
   }
+  const aboutNumberTop = aboutTop + aboutMetrics[0].offsetTop + aboutFirstNumber.offsetTop;
   const aboutColorWaveReady = aboutInView
-    && designScroll > aboutTop - heroHeight * .05
+    && designScroll > aboutNumberTop - heroHeight * ABOUT_COLOR_WAVE_VIEWPORT_EDGE
     && designScroll < aboutTop + heroHeight * .48;
   if (aboutColorWaveReady && !aboutColorWavePlayedInView) {
     aboutColorWavePlayedInView = true;
