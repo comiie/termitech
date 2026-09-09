@@ -591,20 +591,15 @@
   background:var(--partner-hover-bg,#f7f5f5)!important;
 }
 .partners-news .partner-cell__logo{
-  transition:opacity .52s cubic-bezier(.22,1,.36,1);
-  will-change:opacity;
+  opacity:.78;
+  filter:grayscale(1) contrast(1.3);
+  mix-blend-mode:multiply;
+  object-fit:contain;
+  transition:filter .52s cubic-bezier(.22,1,.36,1),opacity .52s cubic-bezier(.22,1,.36,1);
 }
-.partners-news .partner-cell__logo--mono{
-  opacity:.84;
-  filter:grayscale(1) brightness(0);
-}
-.partners-news .partner-cell__logo--color{
-  opacity:0;
-  filter:var(--partner-logo-filter,none);
-}
-.partners-news .partner-cell:hover .partner-cell__logo--mono{opacity:0}
-.partners-news .partner-cell:hover .partner-cell__logo--color{
+.partners-news .partner-cell:hover .partner-cell__logo{
   opacity:1;
+  filter:none;
 }
 
 /* Latest updates — viewport reveal, image breathing and gradient date hover. */
@@ -1280,6 +1275,22 @@
 .news-card__media .news-image--lookstep{left:0;top:0;width:110.9005%;height:100%}
 .news-card__media .news-image--worldarena{left:-6.6351%;top:-4.3796%;width:189.0995%;height:107.2993%}
 .news-card__media .news-image--cctv{left:-23.9336%;top:0;width:140.0474%;height:100%}
+
+/* Supplied partner artwork: retain the original colors and white backgrounds. */
+.partners-news .partner-cell--wordmark>img{width:64%;height:60%}
+.partners-news .partner-cell--fusion>img{width:78%;height:72%}
+.partners-news .partner-cell--seal>img{width:78%;height:58%}
+.news-card__link{position:absolute;inset:0;display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.news-card__link:focus-visible{outline:3px solid #7561ff;outline-offset:-4px}
+.news-card:focus-within .news-card__media img{transform:scale(1.035)}
+.about__background>img{inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+@media(min-width:1025px){
+  /* Five real partners now occupy one row, rather than three placeholder rows. */
+  .partners-news{height:1233px}
+  .news-title{top:554px}
+  .news-action{top:598px}
+  .news-card{top:698px}
+}
 .footer-socials{display:flex;align-items:center;gap:20px;margin-top:40px}
 .footer-legal .footer-socials img{position:static;width:20px;height:20px;object-fit:contain;opacity:1}
 .footer-legal .footer-socials .footer-socials__x{opacity:.4}

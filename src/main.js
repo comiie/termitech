@@ -60,43 +60,35 @@ const sectionTitle = (eyebrow, title, inverted = false) => `
   </div>`;
 
 const partnerLogos = [
-  { src: 'imgImage6.webp', name: 'HMM', filter: 'invert(17%) sepia(41%) saturate(1812%) hue-rotate(185deg) brightness(72%) contrast(105%)' },
-  { src: 'imgAirIndia1.webp', name: 'Air India', filter: 'none' },
-  { src: 'imgImage7.webp', name: 'United Airlines', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage8.webp', name: 'Hamburg Süd', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage9.webp', name: 'CMA CGM', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage10.webp', name: 'K Line', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage11.webp', name: 'COSCO Shipping', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage12.webp', name: 'Evergreen Line', filter: 'invert(32%) sepia(46%) saturate(1124%) hue-rotate(111deg) brightness(91%) contrast(98%)' },
-  { src: 'imgImage13.webp', name: 'Yang Ming', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage14.webp', name: 'PIL', filter: 'invert(28%) sepia(98%) saturate(1474%) hue-rotate(187deg) brightness(81%) contrast(103%)' },
-  { src: 'imgImage15.webp', name: 'Malaysia Airlines', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
-  { src: 'imgImage16.webp', name: 'Fiji Airways', filter: 'invert(70%) sepia(66%) saturate(687%) hue-rotate(358deg) brightness(93%) contrast(93%)' },
-  { src: 'imgImage17.webp', name: 'British Airways', filter: 'invert(17%) sepia(41%) saturate(1812%) hue-rotate(185deg) brightness(72%) contrast(105%)' },
-  { src: 'imgImage18.webp', name: 'Vietnam Airlines', filter: 'invert(70%) sepia(66%) saturate(687%) hue-rotate(358deg) brightness(93%) contrast(93%)' },
-  { src: 'imgImage19.webp', name: 'Air China', filter: 'invert(17%) sepia(93%) saturate(5920%) hue-rotate(350deg) brightness(89%) contrast(102%)' },
+  { src: 'partner-noetix.webp', name: 'NOETIX', variant: 'wordmark' },
+  { src: 'partner-fusion.webp', name: 'FUSION', variant: 'fusion' },
+  { src: 'partner-kunlun.webp', name: 'KunLun', variant: 'wordmark' },
+  { src: 'partner-sjtu.webp', name: '上海交通大学', variant: 'seal' },
+  { src: 'partner-sztu.webp', name: '深圳技术大学', variant: 'seal' },
 ];
 
 const partnerCells = partnerLogos.map((logo, index) => {
   const col = index % 5;
   const row = Math.floor(index / 5);
-  return `<div class="partner-cell" style="left:${80 + col * 352}px;top:${244 + row * 209}px;--partner-delay:${.14 + index * .035}s;--partner-logo-filter:${logo.filter};--partner-hover-bg:#f7f5f5">
+  return `<div class="partner-cell partner-cell--${logo.variant}" style="left:${80 + col * 352}px;top:${244 + row * 209}px;--partner-delay:${.14 + index * .035}s">
     <span class="corner corner--tl"></span><span class="corner corner--tr"></span><span class="corner corner--bl"></span><span class="corner corner--br"></span>
-    <img class="partner-cell__logo partner-cell__logo--mono" src="${A}${logo.src}" alt="${logo.name} 标志">
-    <img class="partner-cell__logo partner-cell__logo--color" src="${A}${logo.src}" alt="" aria-hidden="true">
+    <img class="partner-cell__logo" src="${A}${logo.src}" alt="${logo.name} 标志">
   </div>`;
 }).join('');
 
 const news = [
-  { x: 80, title: '晨昏线首次登陆IFA', image: 'news-ifa.webp', imageClass: 'news-image--ifa' },
-  { x: 526, title: '研究进展｜LookStep：迈向更高效的视觉推理', image: 'news-lookstep.webp', imageClass: 'news-image--lookstep' },
-  { x: 972, title: '晨昏线科技目标因果世界模型GCWM 位列 WorldArena 2.0 Track 2全球第二', image: 'news-worldarena.webp', imageClass: 'news-image--worldarena' },
-  { x: 1418, title: '晨昏线科技在世界机器人大会收获央视连赞', image: 'news-cctv.webp', imageClass: 'news-image--cctv' },
+  { x: 80, title: '晨昏线首次登陆IFA', image: 'news-ifa.webp', imageClass: 'news-image--ifa', href: 'https://www.rbb-online.de/abendschau/videos/20260906_1930/zwischenbilanz-von-der-ifa.html', date: '2026-09-06' },
+  // Dates for these project pages were confirmed by the site owner.
+  { x: 526, title: '研究进展｜LookStep：迈向更高效的视觉推理', image: 'news-lookstep.webp', imageClass: 'news-image--lookstep', href: 'https://kunyang-yu.github.io/LookStep/#top', date: '2026-09-06' },
+  { x: 972, title: '晨昏线科技目标因果世界模型GCWM 位列 WorldArena 2.0 Track 2全球第二', image: 'news-worldarena.webp', imageClass: 'news-image--worldarena', href: 'https://huggingface.co/spaces/WorldArena/WorldArena2.0', date: '2026-09-06' },
+  { x: 1418, title: '晨昏线科技在世界机器人大会收获央视连赞', image: 'news-cctv.webp', imageClass: 'news-image--cctv', href: 'https://weixin.qq.com/sph/Ake9orK153', date: '2026-08-25' },
 ];
 
 const newsCards = news.map((item, index) => `<article class="news-card" style="left:${item.x}px;--news-delay:${.14 + index * .06}s">
-  <time datetime="2026-03-12" data-label="2026.3.12">2026.3.12</time><h3>${item.title}</h3>
+  <a class="news-card__link" href="${item.href}" target="_blank" rel="noopener noreferrer" aria-label="${item.title}（新窗口打开）">
+  ${item.date ? `<time datetime="${item.date}" data-label="${item.date.split('-').map(Number).join('.')}">${item.date.split('-').map(Number).join('.')}</time>` : ''}<h3>${item.title}</h3>
   <div class="news-card__media"><img class="${item.imageClass}" src="${A}${item.image}" alt=""></div>
+  </a>
 </article>`).join('');
 
 const products = [
@@ -264,7 +256,7 @@ document.querySelector('#app').innerHTML = `
     </section>
 
     <section class="about" id="about" data-figma-node="176:268">
-      <div class="about__background"><img src="${A}imgTheGlobalTravelAndTourismIndustryIsResponsibleForAbout45BillionTonsOfEquivalentCarbonDioxideEmissionsAYear1.webp" alt=""><span></span></div>
+      <div class="about__background"><img src="${A}about-seaside.webp" alt=""><span></span></div>
       ${sectionTitle('about us', '关于我们', true)}
       <div class="about__story"><p class="about__intro">晨昏线科技(TermiTech)致力于构建具身机器人大脑，以跨本体、跨品牌的通用适配能力为己任，打破硬件壁垒，让智能真正流动。在行业内首创目标因果世界模型(GCWM1)，基于因果链条洞察物理状态分布，赋予机器人理解复杂现实并自由行动的能力，推动具身智能走向规模化商用。</p>
       <div class="about__action">${action('了解更多', '#about', 'glass')}</div></div>
