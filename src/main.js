@@ -42,12 +42,6 @@ const titleGradientColor = progress => {
   return `rgb(${color.join(',')})`;
 };
 
-const backOut = progress => {
-  const overshoot = 1.45;
-  const shifted = progress - 1;
-  return 1 + (overshoot + 1) * shifted ** 3 + overshoot * shifted ** 2;
-};
-
 const typewriterMarkup = (text, startIndex = 0, totalLength = text.length) => [...text].map((character, index) => {
   const progress = totalLength > 1 ? (startIndex + index) / (totalLength - 1) : 0;
   return `
@@ -119,7 +113,7 @@ const solutionCards = [0, 1].map(group => {
     <button class="solution-dot" type="button" data-solution-index="${group * 2 + index}" aria-label="切换至${item.title}" aria-pressed="${index === 0}"><span aria-hidden="true"></span></button>`).join('');
   const cards = cases.map((item, localIndex) => {
     const index = group * 2 + localIndex;
-    return `<article class="solution-scene solution-scene--${side}${localIndex === 0 ? ' is-mobile-selected' : ''}" data-figma-node="${item.node}" style="--scene-index:${index};--scene-image:url('${A}${item.image}')" aria-label="${item.category}：${item.title}">
+    return `<article class="solution-scene solution-scene--${side}" data-figma-node="${item.node}" style="--scene-index:${index};--scene-image:url('${A}${item.image}')" aria-label="${item.category}：${item.title}">
     <div class="solution-scene__media"><img class="solution-scene__image" src="${A}${item.image}" alt="${item.title}"><div class="solution-scene__action">${action('了解更多', '#explore', 'glass')}</div></div>
     <div class="solution-scene__copy">
       <h4>${item.title}</h4><p>${item.description}</p>
@@ -311,6 +305,15 @@ document.querySelector('#app').innerHTML = `
     </footer>
   </main></div>`;
 
+// Only the four news destinations are live during this preview phase. Keep
+// future destinations as data, not hrefs, so new-tab and mail actions stay off too.
+document.querySelectorAll('a[href]:not(.news-card__link)').forEach(link => {
+  link.dataset.pendingHref = link.getAttribute('href');
+  link.removeAttribute('href');
+  link.setAttribute('role', 'link');
+  link.setAttribute('aria-disabled', 'true');
+});
+
 const canvas = document.querySelector('#canvas');
 const viewport = document.querySelector('.viewport');
 const DESIGN_WIDTH = 1920;
@@ -339,15 +342,11 @@ const solutionDots = [...document.querySelectorAll('.solution-dot')];
 const solutionSceneProgress = solutionScenes.map(() => 0);
 let solutionTitleProgress = 0;
 let activeSolutionIndex = -1;
-const mobileSolutionSelections = [0, 2];
 function syncSolutionControls(activeIndex = activeSolutionIndex) {
   activeSolutionIndex = Math.max(0, activeIndex);
   solutionScenes.forEach((scene, index) => {
-    const selected = mobileFlow
-      ? mobileSolutionSelections[Math.floor(index / 2)] === index
-      : activeSolutionIndex === index;
+    const selected = mobileFlow || activeSolutionIndex === index;
     scene.classList.toggle('is-active', selected);
-    scene.classList.toggle('is-mobile-selected', mobileSolutionSelections[Math.floor(index / 2)] === index);
     scene.inert = !selected;
     scene.setAttribute('aria-hidden', String(!selected));
   });
@@ -359,24 +358,19 @@ function syncSolutionControls(activeIndex = activeSolutionIndex) {
   });
   solutionDots.forEach(dot => {
     const index = Number(dot.dataset.solutionIndex);
-    const selected = mobileFlow ? mobileSolutionSelections[Math.floor(index / 2)] === index : activeSolutionIndex === index;
+    const selected = !mobileFlow && activeSolutionIndex === index;
     dot.setAttribute('aria-pressed', String(selected));
   });
 }
 solutionsSection.addEventListener('click', event => {
   const dot = event.target.closest('[data-solution-index]');
-  if (!dot) return;
+  if (!dot || mobileFlow) return;
   const index = Number(dot.dataset.solutionIndex);
-  if (mobileFlow) {
-    mobileSolutionSelections[Math.floor(index / 2)] = index;
-    syncSolutionControls();
-  } else {
-    // Land on a fully revealed scene, inside its hold interval. Keep the
-    // existing scroll damping so dot navigation uses the same stack motion.
-    scrollTarget = (solutionsSection.offsetTop
-      + (index === 0 ? .15 : index + .65) * solutionsPinDistance / solutionScenes.length) * scale;
-    if (reduceMotion.matches) current = scrollTarget;
-  }
+  // Land on a fully revealed scene, inside its hold interval. Keep the
+  // existing scroll damping so dot navigation uses the same stack motion.
+  scrollTarget = (solutionsSection.offsetTop
+    + (index === 0 ? .15 : index + .65) * solutionsPinDistance / solutionScenes.length) * scale;
+  if (reduceMotion.matches) current = scrollTarget;
   // The shared controls stay mounted, so keyboard focus never needs to move.
 });
 const aboutSection = document.querySelector('.about');
@@ -863,7 +857,35 @@ function mobileSectionVisible(section, threshold = .86) {
   return rect.top < innerHeight * threshold && rect.bottom > innerHeight * .08;
 }
 
-function renderMobile(timestamp) {
+function renderSolutionTitle(revealTarget, deltaTime) {
+  // Share frame-rate-independent buffering across flat and pinned layouts.
+  // Overlapping, longer letter reveals ease to a stop without overshooting.
+  const blend = reduceMotion.matches ? 1 : 1 - Math.exp(-deltaTime / 260);
+  solutionTitleProgress += (revealTarget - solutionTitleProgress) * blend;
+  if (Math.abs(revealTarget - solutionTitleProgress) < .0001) {
+    solutionTitleProgress = revealTarget;
+  }
+  solutionsTitleChars.forEach(character => {
+    if (!character.classList.contains('solutions__type-char--space')) return;
+    character.style.opacity = '1';
+    character.style.transform = 'none';
+  });
+  solutionsTitleLetters.forEach((character, index) => {
+    const staggerOffset = solutionsTitleLetters.length > 1
+      ? (index / (solutionsTitleLetters.length - 1)) * .46
+      : 0;
+    const progress = reduceMotion.matches ? 1 : Math.min(1, Math.max(0,
+      (solutionTitleProgress - staggerOffset) / .54,
+    ));
+    const eased = progress * progress * (3 - 2 * progress);
+    const offset = (1 - eased) * (mobileFlow ? 34 : 24);
+    character.style.opacity = eased.toFixed(4);
+    character.style.transform = `translate3d(0, ${offset.toFixed(2)}${mobileFlow ? 'px' : '%'}, 0)`;
+  });
+  return solutionTitleProgress;
+}
+
+function renderMobile(timestamp, deltaTime) {
   current = scrollY;
   target = scrollY;
   scrollTarget = scrollY;
@@ -881,22 +903,7 @@ function renderMobile(timestamp) {
   const mobileTitleProgress = Math.min(1, Math.max(0,
     (mobileTitleStart - mobileTitleRect.top) / Math.max(1, mobileTitleStart - mobileTitleEnd),
   ));
-  solutionsTitleChars.forEach(character => {
-    if (!character.classList.contains('solutions__type-char--space')) return;
-    character.style.opacity = '1';
-    character.style.transform = 'none';
-  });
-  solutionsTitleLetters.forEach((character, index) => {
-    const staggerOffset = solutionsTitleLetters.length > 1
-      ? (index / (solutionsTitleLetters.length - 1)) * .55
-      : 0;
-    const characterProgress = reduceMotion.matches ? mobileTitleProgress : Math.min(1, Math.max(0,
-      (mobileTitleProgress - staggerOffset) / .45,
-    ));
-    const opacityProgress = 1 - (1 - characterProgress) ** 3;
-    character.style.opacity = opacityProgress.toFixed(4);
-    character.style.transform = `translate3d(0, ${((1 - backOut(characterProgress)) * 34).toFixed(2)}px, 0)`;
-  });
+  renderSolutionTitle(mobileTitleProgress, deltaTime);
   productsSection.classList.add('products--entered');
   embodiedLoopSection.classList.add('embodied-loop--entered');
   renderLoopWaves(timestamp);
@@ -935,7 +942,7 @@ function render(timestamp = performance.now()) {
   footerMark.style.setProperty('--footer-glow-x', `${footerGlowPointer.currentX.toFixed(2)}px`);
   footerMark.style.setProperty('--footer-glow-y', `${footerGlowPointer.currentY.toFixed(2)}px`);
   if (mobileFlow) {
-    renderMobile(timestamp);
+    renderMobile(timestamp, deltaTime);
     frame = requestAnimationFrame(render);
     return;
   }
@@ -1008,35 +1015,7 @@ function render(timestamp = performance.now()) {
   const titleRevealTarget = Math.min(1, Math.max(0,
     (designScroll - titleRevealStart) / Math.max(1, titleRevealEnd - titleRevealStart),
   ));
-  if (reduceMotion.matches) solutionTitleProgress = titleRevealTarget;
-  else {
-    const titleBlend = 1 - Math.exp(-deltaTime / 62);
-    solutionTitleProgress += (titleRevealTarget - solutionTitleProgress) * titleBlend;
-    if (Math.abs(titleRevealTarget - solutionTitleProgress) < .0001) {
-      solutionTitleProgress = titleRevealTarget;
-    }
-  }
-  const titleRevealProgress = solutionTitleProgress;
-  const solutionLetters = solutionsTitleChars.filter(character => (
-    !character.classList.contains('solutions__type-char--space')
-  ));
-  solutionsTitleChars.forEach(character => {
-    if (!character.classList.contains('solutions__type-char--space')) return;
-    character.style.opacity = '1';
-    character.style.transform = 'none';
-  });
-  solutionLetters.forEach((character, index) => {
-    const staggerOffset = solutionLetters.length > 1
-      ? (index / (solutionLetters.length - 1)) * .72
-      : 0;
-    const characterProgress = Math.min(1, Math.max(0,
-      (titleRevealProgress - staggerOffset) / .16,
-    ));
-    const motionProgress = backOut(characterProgress);
-    const opacityProgress = 1 - (1 - characterProgress) ** 3;
-    character.style.opacity = opacityProgress.toFixed(4);
-    character.style.transform = `translate3d(0, ${((1 - motionProgress) * 24).toFixed(2)}%, 0)`;
-  });
+  const titleRevealProgress = renderSolutionTitle(titleRevealTarget, deltaTime);
   const firstSceneStart = -heroHeight * .03;
   const sceneDuration = solutionsInterval * .46;
   const sceneTargets = solutionScenes.map((_, index) => Math.min(1, Math.max(0,
@@ -1156,38 +1135,16 @@ function render(timestamp = performance.now()) {
   frame = requestAnimationFrame(render);
 }
 
-function scrollToHash(hash) {
-  const element = document.querySelector(hash);
-  if (!element) return;
-  if (mobileFlow) {
-    const destination = Math.max(0, element.getBoundingClientRect().top + scrollY - 68);
-    scrollTo({ top: destination, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-    return;
-  }
-  let designTop = 0;
-  for (let node = element; node && node !== canvas; node = node.offsetParent) designTop += node.offsetTop;
-  const destination = designTop * scale;
-  scrollTarget = destination;
-  current = destination;
-  target = destination;
-  appliedScrollY = destination;
-  scrollTo({ top: destination, behavior: 'auto' });
-}
-
 document.addEventListener('click', event => {
-  const link = event.target.closest('a[href^="#"]');
+  const link = event.target.closest('a[data-pending-href]');
   if (!link) return;
-  const hash = link.getAttribute('href');
   event.preventDefault();
   header.classList.remove('header--menu-open');
   mobileMenuToggle.setAttribute('aria-expanded', 'false');
   mobileMenuToggle.setAttribute('aria-label', '打开导航');
-  history.replaceState(null, '', hash);
-  scrollToHash(hash);
 });
 
 addEventListener('resize', updateMetrics, { passive: true });
-addEventListener('hashchange', () => scrollToHash(location.hash));
 addEventListener('load', () => {
   updateMetrics();
   scrollTarget = 0;
